@@ -1,0 +1,35 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# DB Data (We don't want to commit the production DB if it exists, but for the seed, it's okay. Actually, better to ignore it so production doesn't get overwritten locally, but we need the seed. Let's ignore local db and let production create its own seed).
+# lgai_empire.json
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

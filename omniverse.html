@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegionAI Omniverse — The Future of Global Currency</title>
+  <meta name="description" content="LegionAI (LGAI) — The world's first fully autonomous, AI-powered omniverse currency ecosystem. DePIN, RWA, SocialFi, and Omni-chain AI in one place." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="omniverse.css" />
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-orb"></div>
+        <span>Legion<em>AI</em></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="nav_about">About</a></li>
+        <li><a href="#depin">DePIN</a></li>
+        <li><a href="#rwa">RWA</a></li>
+        <li><a href="#socialfi">SocialFi</a></li>
+        <li><a href="#omnichain">Omni-AI</a></li>
+        <li><a href="index.html#swap" class="nav-cta" data-i18n="nav_buy">Buy LGAI</a></li>
+      </ul>
+      <!-- 언어 선택기는 i18n.js가 동적으로 삽입 -->
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge" data-i18n="hero_badge">⚡ Phase 3 — Omniverse Activated</div>
+    <h1 class="hero-title">
+      <span data-i18n="hero_title_1">The World's First</span><br />
+      <span class="gradient-text" data-i18n="hero_title_2">AI-Governed Currency</span><br />
+      <span data-i18n="hero_title_3">Omniverse</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">
+      LegionAI is not just a token. It is a living, breathing, self-sustaining financial empire powered by 4 autonomous pillars — operating 24/7 without human intervention.
+    </p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val" id="totalBurned">0</div>
+        <div class="stat-label" data-i18n="stat_burned">LGAI Burned Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="activeNodes">0</div>
+        <div class="stat-label" data-i18n="stat_nodes">DePIN Nodes Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="totalCreators">0</div>
+        <div class="stat-label" data-i18n="stat_creators">Creators Launched</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="arbProfit">$0</div>
+        <div class="stat-label" data-i18n="stat_profit">AI Arb Profit (24h)</div>
+      </div>
+    </div>
+    <div class="hero-cta-row">
+      <a href="index.html#swap" class="btn-primary" data-i18n="hero_cta">🚀 Buy LGAI Now</a>
+      <a href="#pillars" class="btn-ghost" data-i18n="hero_cta2">Explore Ecosystem ↓</a>
+    </div>
+  </section>
+
+  <!-- PILLARS SECTION -->
+  <section class="pillars" id="pillars">
+    <div class="section-label" data-i18n="pillars_label">THE 4 PILLARS OF THE OMNIVERSE</div>
+    <h2 class="section-title">
+      <span data-i18n="pillars_title_1">Every System</span>
+      <span class="gradient-text" data-i18n="pillars_title_2">Feeds LGAI</span>
+    </h2>
+    <p class="section-sub" data-i18n="pillars_sub">Four autonomous engines running in parallel, all funneling value back into LGAI — creating unstoppable deflationary pressure.</p>
+
+    <div class="pillars-grid">
+      <!-- DePIN -->
+      <div class="pillar-card" id="depin">
+        <div class="pillar-icon depin-icon">⚙️</div>
+        <div class="pillar-tag" data-i18n="p1_tag">PILLAR 01</div>
+        <h3 class="pillar-title" data-i18n="p1_title">DePIN Network</h3>
+        <p class="pillar-desc" data-i18n="p1_desc">Connect your GPU. Mine LGAI. Join the world's first AI-powered decentralized physical infrastructure network where your idle hardware works for the empire.</p>
+        <ul class="pillar-features">
+          <li data-i18n="p1_f1">✓ Plug in your PC — earn LGAI automatically</li>
+          <li data-i18n="p1_f2">✓ Smart contract auto-distributes rewards</li>
+          <li data-i18n="p1_f3">✓ No middlemen, no permission needed</li>
+        </ul>
+        <div class="pillar-metrics">
+          <div class="metric"><span class="m-val" id="depin-nodes">1,247</span><span class="m-label">Nodes Online</span></div>
+          <div class="metric"><span class="m-val" id="depin-apy">142%</span><span class="m-label">Est. APY</span></div>
+        </div>
+        <button class="pillar-btn depin-btn" onclick="openDepin()" data-i18n="p1_btn">Connect My Node →</button>
+      </div>
+
+      <!-- RWA -->
+      <div class="pillar-card featured-card" id="rwa">
+        <div class="featured-badge" data-i18n="p2_featured">🔥 Most Powerful</div>
+        <div class="pillar-icon rwa-icon">🏛️</div>
+        <div class="pillar-tag" data-i18n="p2_tag">PILLAR 02</div>
+        <h3 class="pillar-title" data-i18n="p2_title">RWA Burn Engine</h3>
+        <p class="pillar-desc" data-i18n="p2_desc">Protocol revenue is auto-staked into US Treasury-backed tokens. The yield is used every 24 hours to buy back &amp; burn LGAI — creating a permanent price floor backed by real assets.</p>
+        <ul class="pillar-features">
+          <li data-i18n="p2_f1">✓ Real-world asset backing (US Treasuries)</li>
+          <li data-i18n="p2_f2">✓ Autonomous daily burn — no human needed</li>
+          <li data-i18n="p2_f3">✓ Rug-pull mathematically impossible</li>
+        </ul>
+        <div class="pillar-metrics">
+          <div class="metric"><span class="m-val" id="rwa-tvl">$0</span><span class="m-label">TVL in RWA</span></div>
+          <div class="metric"><span class="m-val" id="rwa-burned">0</span><span class="m-label">LGAI Burned</span></div>
+        </div>
+        <button class="pillar-btn rwa-btn" onclick="openRwa()" data-i18n="p2_btn">View Burn Dashboard →</button>
+      </div>
+
+      <!-- SocialFi -->
+      <div class="pillar-card" id="socialfi">
+        <div class="pillar-icon social-icon">🎨</div>
+        <div class="pillar-tag" data-i18n="p3_tag">PILLAR 03</div>
+        <h3 class="pillar-title" data-i18n="p3_title">SocialFi Launchpad</h3>
+        <p class="pillar-desc" data-i18n="p3_desc">Launch your own fan token in 3 clicks. Every fan token in the LegionAI ecosystem can only be purchased with LGAI — making every creator a LGAI demand machine.</p>
+        <ul class="pillar-features">
+          <li data-i18n="p3_f1">✓ 3-click fan token creation</li>
+          <li data-i18n="p3_f2">✓ LGAI-only payment enforcement</li>
+          <li data-i18n="p3_f3">✓ Creator royalties via smart contract</li>
+        </ul>
+        <div class="pillar-metrics">
+          <div class="metric"><span class="m-val" id="social-tokens">89</span><span class="m-label">Tokens Launched</span></div>
+          <div class="metric"><span class="m-val" id="social-vol">$0</span><span class="m-label">Daily Volume</span></div>
+        </div>
+        <button class="pillar-btn social-btn" onclick="openSocialFi()" data-i18n="p3_btn">Launch My Token →</button>
+      </div>
+
+      <!-- Omni-chain AI -->
+      <div class="pillar-card" id="omnichain">
+        <div class="pillar-icon omni-icon">🤖</div>
+        <div class="pillar-tag" data-i18n="p4_tag">PILLAR 04</div>
+        <h3 class="pillar-title" data-i18n="p4_title">Omni-chain AI Agents</h3>
+        <p class="pillar-desc" data-i18n="p4_desc">An army of autonomous AI agents hunts arbitrage opportunities across Ethereum, Solana, Avalanche and Base 24/7. Profits are distributed to LGAI stakers as dividends.</p>
+        <ul class="pillar-features">
+          <li data-i18n="p4_f1">✓ Hunts 4 chains simultaneously</li>
+          <li data-i18n="p4_f2">✓ Profits auto-distributed to stakers</li>
+          <li data-i18n="p4_f3">✓ Zero downtime — fully autonomous</li>
+        </ul>
+        <div class="pillar-metrics">
+          <div class="metric"><span class="m-val" id="omni-chains">4</span><span class="m-label">Chains Hunted</span></div>
+          <div class="metric"><span class="m-val" id="omni-yield">$0</span><span class="m-label">Staker Yield (24h)</span></div>
+        </div>
+        <button class="pillar-btn omni-btn" onclick="openOmnichain()" data-i18n="p4_btn">Stake &amp; Earn →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLYWHEEL -->
+  <section class="flywheel">
+    <div class="section-label" data-i18n="fw_label">THE SELF-AMPLIFYING LOOP</div>
+    <h2 class="section-title">
+      <span data-i18n="fw_title_1">The</span>
+      <span class="gradient-text" data-i18n="fw_title_2">LGAI Flywheel</span>
+    </h2>
+    <p class="section-sub" data-i18n="fw_sub">All 4 pillars are interconnected. Each one generates demand, burns supply, and makes LGAI more scarce and valuable — automatically.</p>
+    <div class="flywheel-diagram">
+      <div class="fw-node fw-top">
+        <div class="fw-icon">⚙️</div>
+        <div class="fw-label">DePIN<br/><small data-i18n="fw_depin_sub">Generates LGAI demand</small></div>
+      </div>
+      <div class="fw-arrow fw-arrow-right">→</div>
+      <div class="fw-node fw-right">
+        <div class="fw-icon">🏛️</div>
+        <div class="fw-label">RWA Engine<br/><small data-i18n="fw_rwa_sub">Burns LGAI daily</small></div>
+      </div>
+      <div class="fw-arrow fw-arrow-down">↓</div>
+      <div class="fw-node fw-bottom">
+        <div class="fw-icon">🤖</div>
+        <div class="fw-label">Omni-AI<br/><small data-i18n="fw_omni_sub">Earns ETH → funds burns</small></div>
+      </div>
+      <div class="fw-arrow fw-arrow-left">←</div>
+      <div class="fw-node fw-left">
+        <div class="fw-icon">🎨</div>
+        <div class="fw-label">SocialFi<br/><small data-i18n="fw_social_sub">Forces LGAI purchases</small></div>
+      </div>
+      <div class="fw-center">
+        <div class="fw-center-orb"></div>
+        <div class="fw-center-text">LGAI<br/>🔺 Price</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKETPLACE -->
+  <section class="marketplace-section">
+    <div class="section-label" data-i18n="mkt_label">DIGITAL ASSET ECOSYSTEM</div>
+    <h2 class="section-title">
+      <span data-i18n="mkt_title_1">The</span>
+      <span class="gradient-text" data-i18n="mkt_title_2">LGAI Marketplace</span>
+    </h2>
+    <p class="section-sub" data-i18n="mkt_sub">Buy, sell, and trade digital assets — code, art, data, templates, and more. All transactions powered exclusively by LGAI.</p>
+    <div class="marketplace-preview">
+      <div class="market-card">
+        <div class="market-img nft-img">🎨</div>
+        <div class="market-info">
+          <div class="market-name">Genesis Collection #001</div>
+          <div class="market-price">1,000 LGAI</div>
+          <div class="market-badge">Digital Art</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="market-img code-img">💻</div>
+        <div class="market-info">
+          <div class="market-name">DeFi Trading Bot Template</div>
+          <div class="market-price">500 LGAI</div>
+          <div class="market-badge">Code</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="market-img data-img">📊</div>
+        <div class="market-info">
+          <div class="market-name">Crypto Alpha Report #12</div>
+          <div class="market-price">250 LGAI</div>
+          <div class="market-badge">Data</div>
+        </div>
+      </div>
+      <div class="market-card">
+        <div class="market-img music-img">🎵</div>
+        <div class="market-info">
+          <div class="market-name">AI Music Track — Epoch</div>
+          <div class="market-price">150 LGAI</div>
+          <div class="market-badge">Music</div>
+        </div>
+      </div>
+    </div>
+    <a href="#" class="btn-primary" style="margin-top:2rem;display:inline-block;" data-i18n="mkt_explore">Explore Marketplace →</a>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="roadmap">
+    <div class="section-label" data-i18n="rm_label">THE MASTER PLAN</div>
+    <h2 class="section-title">
+      <span data-i18n="rm_title_1">Road to</span>
+      <span class="gradient-text" data-i18n="rm_title_2">Global Dominance</span>
+    </h2>
+    <div class="roadmap-timeline">
+      <div class="rm-item done">
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-phase" data-i18n="rm_p1_phase">Phase 1 ✅</div>
+          <div class="rm-title" data-i18n="rm_p1_title">Genesis</div>
+          <p data-i18n="rm_p1_desc">1B LGAI token deployed. 400M presale launched. Global website live. First swap completed.</p>
+        </div>
+      </div>
+      <div class="rm-item done">
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-phase" data-i18n="rm_p2_phase">Phase 2 ✅</div>
+          <div class="rm-title" data-i18n="rm_p2_title">Autonomous Engine</div>
+          <p data-i18n="rm_p2_desc">Auto-marketing bot. AutoLpLauncher contract. Price Defender AI. 24/7 operations — zero human needed.</p>
+        </div>
+      </div>
+      <div class="rm-item active">
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-phase" data-i18n="rm_p3_phase">Phase 3 🔥 LIVE</div>
+          <div class="rm-title" data-i18n="rm_p3_title">Omniverse Activation</div>
+          <p data-i18n="rm_p3_desc">DePIN GPU Network. RWA Burn Engine. SocialFi Launchpad. Omni-chain AI Agents. Digital Asset Marketplace.</p>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-phase" data-i18n="rm_p4_phase">Phase 4</div>
+          <div class="rm-title" data-i18n="rm_p4_title">Global Currency Status</div>
+          <p data-i18n="rm_p4_desc">CEX listings. Real-world merchant payments. LGAI Pay card. Cross-border remittance. Replacing fiat.</p>
+        </div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"></div>
+        <div class="rm-content">
+          <div class="rm-phase" data-i18n="rm_p5_phase">Phase 5</div>
+          <div class="rm-title" data-i18n="rm_p5_title">World Domination</div>
+          <p data-i18n="rm_p5_desc">LGAI becomes the reserve currency of the decentralized internet. 100M+ users. The Bitcoin successor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-orb small"></div>
+        <span>Legion<em>AI</em></span>
+      </div>
+      <p class="footer-tagline" data-i18n="footer_tagline">The world's first AI-governed omniverse currency. Built to outlast everything.</p>
+      <div class="footer-links">
+        <a href="#">Twitter</a>
+        <a href="#">Telegram</a>
+        <a href="#">Discord</a>
+        <a href="#">Whitepaper</a>
+        <a href="#">Etherscan</a>
+      </div>
+      <p class="footer-disclaimer" data-i18n="footer_disclaimer">LGAI is a decentralized community token on the Sepolia testnet. This is not financial advice.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL: DePIN -->
+  <div class="modal" id="depinModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('depinModal')">✕</button>
+      <div class="modal-icon">⚙️</div>
+      <h3 data-i18n="depin_modal_title">Connect Your DePIN Node</h3>
+      <p data-i18n="depin_modal_desc">Share your GPU compute power and earn LGAI automatically via smart contract.</p>
+      <div class="form-group">
+        <label data-i18n="depin_gpu_label">GPU Model</label>
+        <input type="text" placeholder="e.g. NVIDIA RTX 4090" id="gpuModel" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="depin_vram_label">VRAM (GB)</label>
+        <input type="number" placeholder="e.g. 24" id="gpuVram" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="depin_wallet_label">Your LGAI Wallet Address</label>
+        <input type="text" placeholder="0x..." id="depinWallet" />
+      </div>
+      <div class="reward-estimate" id="rewardEstimate">
+        <div class="re-label" data-i18n="depin_reward_label">Estimated Daily Reward</div>
+        <div class="re-val">— LGAI</div>
+      </div>
+      <button class="btn-primary full-width" onclick="calcReward()" data-i18n="depin_btn">Calculate &amp; Connect Node</button>
+    </div>
+  </div>
+
+  <!-- MODAL: RWA -->
+  <div class="modal" id="rwaModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('rwaModal')">✕</button>
+      <div class="modal-icon">🏛️</div>
+      <h3 data-i18n="rwa_modal_title">RWA Burn Engine Dashboard</h3>
+      <p data-i18n="rwa_modal_desc">Real-world asset yield fuels daily LGAI buyback &amp; burn — creating a permanent price floor.</p>
+      <div class="rwa-stats-grid">
+        <div class="rwa-stat"><div class="rs-val">$0</div><div class="rs-label">ETH in Treasury</div></div>
+        <div class="rwa-stat"><div class="rs-val">0%</div><div class="rs-label">Current APY</div></div>
+        <div class="rwa-stat"><div class="rs-val">0</div><div class="rs-label">LGAI Burned (Total)</div></div>
+        <div class="rwa-stat"><div class="rs-val">$0</div><div class="rs-label">Next Burn Value</div></div>
+      </div>
+      <div class="burn-timer">
+        <div class="bt-label" data-i18n="rwa_next_burn">⏱ Next Autonomous Burn In</div>
+        <div class="bt-countdown" id="burnCountdown">23:59:42</div>
+      </div>
+      <button class="btn-primary full-width" style="margin-top:1.5rem" data-i18n="rwa_btn">View on Etherscan →</button>
+    </div>
+  </div>
+
+  <!-- MODAL: SocialFi -->
+  <div class="modal" id="socialModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('socialModal')">✕</button>
+      <div class="modal-icon">🎨</div>
+      <h3 data-i18n="social_modal_title">Launch Your Fan Token</h3>
+      <p data-i18n="social_modal_desc">3 clicks. Your own token. Powered by LGAI.</p>
+      <div class="steps-row">
+        <div class="step active-step"><div class="step-num">1</div><div class="step-label">Name It</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-num">2</div><div class="step-label">Set Supply</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-num">3</div><div class="step-label">Launch 🚀</div></div>
+      </div>
+      <div class="form-group">
+        <label data-i18n="social_name_label">Token Name</label>
+        <input type="text" placeholder="e.g. Commander Token" id="tokenName" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="social_symbol_label">Token Symbol</label>
+        <input type="text" placeholder="e.g. CMD" id="tokenSymbol" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="social_supply_label">Total Supply</label>
+        <input type="number" placeholder="e.g. 1,000,000" id="tokenSupply" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="social_price_label">Price per Token (in LGAI)</label>
+        <input type="number" placeholder="e.g. 10" id="tokenPrice" />
+      </div>
+      <button class="btn-primary full-width" onclick="launchToken()" data-i18n="social_btn">🚀 Deploy Fan Token</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Omnichain -->
+  <div class="modal" id="omnichainModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('omnichainModal')">✕</button>
+      <div class="modal-icon">🤖</div>
+      <h3 data-i18n="omni_modal_title">Omni-chain AI Agent Dashboard</h3>
+      <p data-i18n="omni_modal_desc">Stake LGAI. Our AI agents hunt profits across 4 blockchains. You earn dividends automatically.</p>
+      <div class="chain-status-grid">
+        <div class="chain-item"><div class="chain-dot green"></div><span>Ethereum</span><span class="chain-profit">+$0</span></div>
+        <div class="chain-item"><div class="chain-dot green"></div><span>Solana</span><span class="chain-profit">+$0</span></div>
+        <div class="chain-item"><div class="chain-dot yellow"></div><span>Avalanche</span><span class="chain-profit">+$0</span></div>
+        <div class="chain-item"><div class="chain-dot green"></div><span>Base</span><span class="chain-profit">+$0</span></div>
+      </div>
+      <div class="form-group" style="margin-top:1.5rem">
+        <label data-i18n="omni_stake_label">Stake Amount (LGAI)</label>
+        <input type="number" placeholder="Enter LGAI to stake" id="stakeAmount" />
+      </div>
+      <div class="stake-info">
+        <div class="si-row">
+          <span data-i18n="omni_yield_label">Estimated Daily Yield</span>
+          <span class="si-val" id="stakeYield">— LGAI</span>
+        </div>
+        <div class="si-row">
+          <span data-i18n="omni_lock_label">Lock Period</span>
+          <span class="si-val" data-i18n="omni_lock_val">30 Days</span>
+        </div>
+        <div class="si-row">
+          <span data-i18n="omni_apr_label">Current APR</span>
+          <span class="si-val">~38%</span>
+        </div>
+      </div>
+      <button class="btn-primary full-width" onclick="calcStake()" data-i18n="omni_btn">Connect Wallet &amp; Stake</button>
+    </div>
+  </div>
+
+  <!-- SCRIPTS: i18n 먼저, 그 다음 메인 JS -->
+  <script src="i18n.js"></script>
+  <script src="omniverse.js"></script>
+</body>
+</html>

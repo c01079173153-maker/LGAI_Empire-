@@ -1,0 +1,11 @@
+{
+  "network": "sepolia",
+  "contractAddress": "0xC8C2D7B7736C3B5eC4eD0F547791E4389A054512",
+  "deployer": "0x68B56EAc0209B3230891B4e74a78b276f3b74610",
+  "devWallet": "0x68B56EAc0209B3230891B4e74a78b276f3b74610",
+  "deployedAt": "2026-05-24T17:27:35.240Z",
+  "tokenName": "Legion AI",
+  "tokenSymbol": "LGAI",
+  "totalSupply": "1,000,000,000",
+  "taxRate": "4%"
+}

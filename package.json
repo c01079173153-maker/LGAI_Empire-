@@ -1,0 +1,20 @@
+{
+  "name": "legionai-project",
+  "version": "1.0.0",
+  "description": "Legion AI (LGAI) Token Smart Contract - Powered by 10,000 AI Agent Legion",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network hardhat",
+    "verify": "npx hardhat verify --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1"
+  }
+}

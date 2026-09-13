@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LGAI Community — Legion of the Future</title>
+  <meta name="description" content="LGAI 공식 커뮤니티. DePIN, RWA, SocialFi, 옴니체인 AI에 대한 모든 토론과 정보를 공유하세요." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050508; --bg2: #0a0d1a; --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08); --accent: #7c3aed; --accent2: #06b6d4;
+      --gold: #fbbf24; --green: #10b981; --text: #f1f5f9; --muted: #94a3b8;
+      --radius: 14px; --tr: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(5,5,8,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0.9rem 1.5rem; }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .nav-logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
+    .nav-logo span { color: var(--accent); }
+    .nav-badge { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: var(--green); padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: var(--tr); }
+    .nav-links a:hover { color: var(--text); }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: var(--tr); border: none; font-family: inherit; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(124,58,237,0.6); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+
+    /* LAYOUT */
+    .layout { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 240px 1fr 280px; gap: 1.5rem; }
+
+    /* SIDEBAR LEFT */
+    .sidebar-left { display: flex; flex-direction: column; gap: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
+    .card-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem; }
+    .category-list { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+    .category-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem; border-radius: 10px; cursor: pointer; transition: var(--tr); font-size: 0.9rem; color: var(--muted); border: none; background: none; width: 100%; text-align: left; }
+    .category-item:hover, .category-item.active { background: rgba(124,58,237,0.15); color: var(--text); }
+    .category-item.active { color: #a78bfa; font-weight: 600; }
+    .cat-count { margin-left: auto; font-size: 0.75rem; background: rgba(255,255,255,0.06); padding: 0.1rem 0.5rem; border-radius: 50px; }
+
+    /* MAIN FEED */
+    .main-feed { display: flex; flex-direction: column; gap: 1rem; }
+    .feed-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+    .feed-tabs { display: flex; gap: 0.5rem; }
+    .tab { padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: var(--tr); border: 1px solid var(--border); background: none; color: var(--muted); font-family: inherit; }
+    .tab.active { background: rgba(124,58,237,0.2); border-color: var(--accent); color: #a78bfa; }
+
+    /* POST CARD */
+    .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; transition: var(--tr); cursor: pointer; }
+    .post-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(124,58,237,0.3); transform: translateY(-2px); }
+    .post-card.pinned { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); }
+    .post-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.8rem; }
+    .post-avatar { font-size: 1.3rem; }
+    .post-author { font-weight: 600; font-size: 0.9rem; }
+    .post-time { color: var(--muted); font-size: 0.75rem; margin-left: auto; }
+    .post-badge { font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 50px; margin-left: 0.4rem; }
+    .badge-admin { background: rgba(124,58,237,0.2); color: #a78bfa; }
+    .badge-bot { background: rgba(6,182,212,0.15); color: var(--accent2); }
+    .badge-pin { background: rgba(245,158,11,0.2); color: var(--gold); }
+    .post-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.4; }
+    .post-content-preview { color: var(--muted); font-size: 0.88rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.8rem; }
+    .post-footer { display: flex; align-items: center; gap: 1rem; }
+    .post-stat { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--muted); cursor: pointer; transition: var(--tr); background: none; border: none; font-family: inherit; padding: 0; }
+    .post-stat:hover { color: var(--accent2); }
+    .cat-tag { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 50px; margin-left: auto; }
+    .tag-announcement { background: rgba(239,68,68,0.15); color: #f87171; }
+    .tag-depin { background: rgba(6,182,212,0.15); color: var(--accent2); }
+    .tag-rwa { background: rgba(245,158,11,0.15); color: var(--gold); }
+    .tag-socialfi { background: rgba(236,72,153,0.15); color: #f472b6; }
+    .tag-alpha { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .tag-market { background: rgba(16,185,129,0.15); color: var(--green); }
+    .tag-discussion { background: rgba(255,255,255,0.08); color: var(--muted); }
+    .tag-general { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+    /* SIDEBAR RIGHT */
+    .sidebar-right { display: flex; flex-direction: column; gap: 1rem; }
+    .live-stat { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .live-stat:last-child { border-bottom: none; }
+    .ls-label { font-size: 0.82rem; color: var(--muted); }
+    .ls-val { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--accent2); }
+    .ls-val.green { color: var(--green); }
+    .ls-val.gold { color: var(--gold); }
+
+    .trending-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--tr); }
+    .trending-item:last-child { border-bottom: none; }
+    .trending-item:hover { opacity: 0.8; }
+    .trending-num { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: var(--accent); font-weight: 700; min-width: 20px; }
+    .trending-title { font-size: 0.83rem; color: var(--text); font-weight: 500; line-height: 1.4; }
+    .trending-meta { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* WRITE FORM */
+    .write-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
+    .write-box input, .write-box textarea, .write-box select {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.65rem 0.9rem; color: var(--text);
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; margin-bottom: 0.6rem;
+      transition: var(--tr); outline: none; resize: vertical;
+    }
+    .write-box input:focus, .write-box textarea:focus, .write-box select:focus { border-color: var(--accent); background: rgba(124,58,237,0.05); }
+    .write-box textarea { min-height: 100px; }
+    .write-box select option { background: #0a0d1a; }
+    .write-row { display: flex; gap: 0.5rem; }
+    .write-row input { flex: 1; margin-bottom: 0; }
+
+    /* POST DETAIL MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); padding: 1rem; align-items: flex-start; justify-content: center; overflow-y: auto; }
+    .modal-overlay.open { display: flex; }
+    .modal-content { background: #0a0d1a; border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 700px; margin: 2rem auto; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header { padding: 1.5rem 1.5rem 0; }
+    .modal-close-btn { float: right; background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; }
+    .modal-body { padding: 1rem 1.5rem; }
+    .comment-list { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+    .comment-item { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 0.8rem 1rem; }
+    .comment-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .comment-author { font-weight: 600; font-size: 0.85rem; }
+    .comment-time { color: var(--muted); font-size: 0.72rem; margin-left: auto; }
+    .comment-text { font-size: 0.88rem; color: var(--text); line-height: 1.6; white-space: pre-wrap; }
+    .comment-input-area { margin-top: 1rem; display: flex; gap: 0.5rem; }
+    .comment-input-area input { flex: 1; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #0d0f1a; border: 1px solid var(--accent); color: var(--text); padding: 0.75rem 1.2rem; border-radius: 50px; font-size: 0.9rem; font-weight: 600; z-index: 9999; animation: fadeUp 0.3s ease; }
+
+    /* LIVE INDICATOR */
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 2s infinite; display: inline-block; margin-right: 0.4rem; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* LOADING */
+    .loading { text-align: center; padding: 3rem; color: var(--muted); }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 0.5rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* EMPTY */
+    .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media(max-width:900px) { .layout { grid-template-columns: 1fr; } .sidebar-left, .sidebar-right { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="omniverse.html">Legion<span>AI</span>&nbsp;<small class="nav-badge"><span class="live-dot"></span>LIVE</small></a>
+    <ul class="nav-links">
+      <li><a href="omniverse.html">← 홈으로</a></li>
+      <li><a href="#write">글쓰기</a></li>
+    </ul>
+    <button class="btn btn-primary" onclick="scrollToWrite()">✏️ 글 작성</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- 사이드바 왼쪽: 카테고리 -->
+  <aside class="sidebar-left">
+    <div class="card">
+      <div class="card-title">카테고리</div>
+      <ul class="category-list" id="categoryList">
+        <li><button class="category-item active" data-cat="all" onclick="filterCategory('all',this)">🌌 전체<span class="cat-count" id="cnt-all">0</span></button></li>
+        <li><button class="category-item" data-cat="announcement" onclick="filterCategory('announcement',this)">📢 공지<span class="cat-count" id="cnt-ann">0</span></button></li>
+        <li><button class="category-item" data-cat="alpha" onclick="filterCategory('alpha',this)">🧠 알파정보<span class="cat-count" id="cnt-alpha">0</span></button></li>
+        <li><button class="category-item" data-cat="depin" onclick="filterCategory('depin',this)">⚙️ DePIN<span class="cat-count" id="cnt-depin">0</span></button></li>
+        <li><button class="category-item" data-cat="rwa" onclick="filterCategory('rwa',this)">🏛️ RWA<span class="cat-count" id="cnt-rwa">0</span></button></li>
+        <li><button class="category-item" data-cat="socialfi" onclick="filterCategory('socialfi',this)">🎨 SocialFi<span class="cat-count" id="cnt-social">0</span></button></li>
+        <li><button class="category-item" data-cat="market" onclick="filterCategory('market',this)">📈 시세<span class="cat-count" id="cnt-market">0</span></button></li>
+        <li><button class="category-item" data-cat="discussion" onclick="filterCategory('discussion',this)">💬 토론<span class="cat-count" id="cnt-disc">0</span></button></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">빠른 링크</div>
+      <ul class="category-list">
+        <li><button class="category-item" onclick="location.href='omniverse.html'">🌌 옴니버스 허브</button></li>
+        <li><button class="category-item" onclick="alert('준비 중!')">🔗 텔레그램</button></li>
+        <li><button class="category-item" onclick="alert('준비 중!')">🐦 트위터/X</button></li>
+        <li><button class="category-item" onclick="alert('준비 중!')">📄 Whitepaper</button></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- 메인 피드 -->
+  <main class="main-feed">
+    <!-- 글쓰기 박스 -->
+    <div class="write-box" id="write">
+      <div class="card-title">✏️ 새 글 작성</div>
+      <div class="write-row">
+        <input type="text" id="writeAuthor" placeholder="닉네임 (예: CryptoWatcher)" maxlength="30" />
+        <select id="writeCategory">
+          <option value="general">일반</option>
+          <option value="discussion">토론</option>
+          <option value="alpha">알파정보</option>
+          <option value="depin">DePIN</option>
+          <option value="rwa">RWA</option>
+          <option value="socialfi">SocialFi</option>
+          <option value="market">시세</option>
+        </select>
+      </div>
+      <input type="text" id="writeTitle" placeholder="제목을 입력하세요" maxlength="100" />
+      <textarea id="writeContent" placeholder="내용을 입력하세요. LGAI에 대한 정보, 질문, 분석 등 무엇이든 환영합니다! 🌌"></textarea>
+      <button class="btn btn-primary" onclick="submitPost()">🚀 게시하기</button>
+      <small style="color:var(--muted);font-size:0.75rem;margin-left:1rem;">AI 봇이 자동으로 답변합니다 🤖</small>
+    </div>
+
+    <!-- 피드 헤더 -->
+    <div class="feed-header">
+      <div class="feed-tabs">
+        <button class="tab active" onclick="setSort('latest',this)">최신순</button>
+        <button class="tab" onclick="setSort('popular',this)">인기순</button>
+      </div>
+      <span style="color:var(--muted);font-size:0.82rem;" id="postCount">로딩 중...</span>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div id="postList"><div class="loading"><div class="spinner"></div><br/>커뮤니티 불러오는 중...</div></div>
+
+    <button class="btn btn-ghost" id="loadMoreBtn" onclick="loadMore()" style="display:none">더 보기 ↓</button>
+  </main>
+
+  <!-- 사이드바 오른쪽: 실시간 통계 + 트렌딩 -->
+  <aside class="sidebar-right">
+    <div class="card">
+      <div class="card-title">⚡ 실시간 현황</div>
+      <div class="live-stat"><span class="ls-label">LGAI 가격</span><span class="ls-val" id="st-price">$0.0001</span></div>
+      <div class="live-stat"><span class="ls-label">오늘 소각량</span><span class="ls-val gold" id="st-burned">-</span></div>
+      <div class="live-stat"><span class="ls-label">활성 노드</span><span class="ls-val" id="st-nodes">-</span></div>
+      <div class="live-stat"><span class="ls-label">총 멤버</span><span class="ls-val green" id="st-users">-</span></div>
+      <div class="live-stat"><span class="ls-label">게시글 수</span><span class="ls-val" id="st-posts">-</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔥 인기 게시글</div>
+      <div id="trendingList"><div class="loading" style="padding:1rem"><div class="spinner"></div></div></div>
+    </div>
+    <div class="card" style="background:rgba(124,58,237,0.06);border-color:rgba(124,58,237,0.2)">
+      <div class="card-title">🤖 AI 봇 상태</div>
+      <div class="live-stat"><span class="ls-label"><span class="live-dot"></span>자동 답변</span><span class="ls-val green">가동중</span></div>
+      <div class="live-stat"><span class="ls-label"><span class="live-dot"></span>마케팅봇</span><span class="ls-val green">가동중</span></div>
+      <div class="live-stat"><span class="ls-label"><span class="live-dot"></span>소각봇</span><span class="ls-val green">가동중</span></div>
+      <div class="live-stat"><span class="ls-label"><span class="live-dot"></span>시세봇</span><span class="ls-val green">가동중</span></div>
+    </div>
+  </aside>
+</div>
+
+<!-- POST DETAIL MODAL -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-close-btn" onclick="closePostModal()">✕</button>
+      <div id="modalPostContent"></div>
+    </div>
+    <div class="modal-body">
+      <div class="comment-list" id="modalComments"></div>
+      <div class="comment-input-area" style="margin-top:1.2rem;">
+        <input type="text" id="commentAuthor" placeholder="닉네임" maxlength="30" style="max-width:140px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.8rem;color:var(--text);font-family:inherit;" />
+        <input type="text" id="commentText" placeholder="댓글을 입력하세요... AI가 답변합니다 🤖" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.8rem;color:var(--text);font-family:inherit;" onkeydown="if(event.key==='Enter')submitComment()" />
+        <button class="btn btn-primary" onclick="submitComment()" style="padding:0.6rem 1rem;">전송</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// LGAI COMMUNITY — Frontend JS
+// ══════════════════════════════════════════
+const API = ''; // 같은 서버 사용
+let currentSort = 'latest';
+let currentCat  = 'all';
+let currentPage = 0;
+let totalPosts  = 0;
+let currentPostId = null;
+const PER_PAGE  = 15;
+
+const CAT_LABELS = {
+  announcement:'📢 공지', alpha:'🧠 알파', depin:'⚙️ DePIN', rwa:'🏛️ RWA',
+  socialfi:'🎨 SocialFi', market:'📈 시세', discussion:'💬 토론', general:'💬 일반'
+};
+
+function timeAgo(dateStr) {
+  const diff = (Date.now() - new Date(dateStr + 'Z')) / 1000;
+  if (diff < 60) return '방금 전';
+  if (diff < 3600) return Math.floor(diff/60) + '분 전';
+  if (diff < 86400) return Math.floor(diff/3600) + '시간 전';
+  return Math.floor(diff/86400) + '일 전';
+}
+
+function renderMd(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+
+// ── 게시글 로드 ──
+async function loadPosts(append = false) {
+  if (!append) { currentPage = 0; document.getElementById('postList').innerHTML = '<div class="loading"><div class="spinner"></div><br/>불러오는 중...</div>'; }
+  try {
+    const url = `${API}/api/posts?sort=${currentSort}&category=${currentCat}&limit=${PER_PAGE}&offset=${currentPage * PER_PAGE}`;
+    const r = await fetch(url);
+    const { posts, total } = await r.json();
+    totalPosts = total;
+    document.getElementById('postCount').textContent = `총 ${total}개의 게시글`;
+    document.getElementById('loadMoreBtn').style.display = (currentPage + 1) * PER_PAGE < total ? 'block' : 'none';
+
+    const container = document.getElementById('postList');
+    if (!append) container.innerHTML = '';
+    if (!posts.length && !append) { container.innerHTML = '<div class="empty-state">📭 게시글이 없습니다. 첫 글을 작성해 보세요!</div>'; return; }
+
+    posts.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'post-card' + (p.is_pinned ? ' pinned' : '');
+      el.onclick = () => openPost(p.id);
+      el.innerHTML = `
+        <div class="post-header">
+          <span class="post-avatar">${p.avatar}</span>
+          <span class="post-author">${escHtml(p.author)}</span>
+          ${p.is_bot ? '<span class="post-badge badge-bot">BOT</span>' : ''}
+          ${p.is_pinned ? '<span class="post-badge badge-pin">📌 공지</span>' : ''}
+          <span class="post-time">${timeAgo(p.created_at)}</span>
+        </div>
+        <div class="post-title">${escHtml(p.title)}</div>
+        <div class="post-content-preview">${escHtml(p.content)}</div>
+        <div class="post-footer">
+          <button class="post-stat" onclick="event.stopPropagation();likePost('${p.id}',this)">❤️ ${p.likes}</button>
+          <span class="post-stat">👁 ${p.views}</span>
+          <span class="post-stat">💬 ${p.comment_count || 0}</span>
+          <span class="cat-tag tag-${p.category}">${CAT_LABELS[p.category] || p.category}</span>
+        </div>`;
+      container.appendChild(el);
+    });
+    currentPage++;
+  } catch(e) {
+    document.getElementById('postList').innerHTML = '<div class="empty-state">⚠️ 서버 연결 중... 잠시 후 새로고침하세요</div>';
+  }
+}
+
+function loadMore() { loadPosts(true); }
+
+// ── 카테고리 필터 ──
+function filterCategory(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.category-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadPosts();
+}
+
+// ── 정렬 ──
+function setSort(sort, btn) {
+  currentSort = sort;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadPosts();
+}
+
+// ── 게시글 좋아요 ──
+async function likePost(id, btn) {
+  await fetch(`${API}/api/posts/${id}/like`, { method: 'POST' });
+  const parts = btn.textContent.split(' ');
+  btn.textContent = '❤️ ' + (parseInt(parts[1]) + 1);
+}
+
+// ── 글쓰기 ──
+async function submitPost() {
+  const author  = document.getElementById('writeAuthor').value.trim() || '익명';
+  const category= document.getElementById('writeCategory').value;
+  const title   = document.getElementById('writeTitle').value.trim();
+  const content = document.getElementById('writeContent').value.trim();
+  if (!title || !content) { showToast('제목과 내용을 입력하세요!'); return; }
+  const r = await fetch(`${API}/api/posts`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ author, category, title, content, avatar: '👤' }) });
+  const data = await r.json();
+  if (data.success) {
+    document.getElementById('writeTitle').value = '';
+    document.getElementById('writeContent').value = '';
+    showToast('✅ 게시글이 등록됐습니다! AI 봇이 곧 답변합니다 🤖');
+    setTimeout(() => loadPosts(), 500);
+  }
+}
+
+// ── 게시글 상세 모달 ──
+async function openPost(id) {
+  currentPostId = id;
+  document.getElementById('postModal').classList.add('open');
+  document.getElementById('modalPostContent').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  document.getElementById('modalComments').innerHTML = '';
+  try {
+    const r = await fetch(`${API}/api/posts/${id}`);
+    const { post, comments } = await r.json();
+    document.getElementById('modalPostContent').innerHTML = `
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:1rem">
+        <span style="font-size:1.5rem">${post.avatar}</span>
+        <span style="font-weight:700">${escHtml(post.author)}</span>
+        ${post.is_bot ? '<span class="post-badge badge-bot">BOT</span>' : ''}
+        <span style="color:var(--muted);font-size:0.8rem;margin-left:auto">${timeAgo(post.created_at)}</span>
+      </div>
+      <h2 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">${escHtml(post.title)}</h2>
+      <div style="color:var(--muted);font-size:0.9rem;line-height:1.7;white-space:pre-wrap">${renderMd(escHtml(post.content))}</div>
+      <div style="display:flex;gap:1rem;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border)">
+        <span style="color:var(--muted);font-size:0.8rem">❤️ ${post.likes} · 👁 ${post.views} · 💬 ${comments.length}</span>
+        <span class="cat-tag tag-${post.category}" style="margin-left:auto">${CAT_LABELS[post.category]||post.category}</span>
+      </div>`;
+    renderComments(comments);
+  } catch(e) { document.getElementById('modalPostContent').innerHTML = '<p style="color:var(--muted)">불러오기 실패</p>'; }
+}
+
+function renderComments(comments) {
+  const container = document.getElementById('modalComments');
+  if (!comments.length) { container.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;text-align:center">아직 댓글이 없습니다. 첫 댓글을 달아보세요!</p>'; return; }
+  container.innerHTML = comments.map(c => `
+    <div class="comment-item">
+      <div class="comment-header">
+        <span style="font-size:1.1rem">${c.avatar}</span>
+        <span class="comment-author">${escHtml(c.author)}</span>
+        ${c.is_bot ? '<span class="post-badge badge-bot">AI</span>' : ''}
+        <span class="comment-time">${timeAgo(c.created_at)}</span>
+      </div>
+      <div class="comment-text">${renderMd(escHtml(c.content))}</div>
+    </div>`).join('');
+}
+
+function closePostModal() { document.getElementById('postModal').classList.remove('open'); }
+
+// ── 댓글 작성 ──
+async function submitComment() {
+  if (!currentPostId) return;
+  const author  = document.getElementById('commentAuthor').value.trim() || '익명';
+  const content = document.getElementById('commentText').value.trim();
+  if (!content) return;
+  const r = await fetch(`${API}/api/comments`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ post_id: currentPostId, author, content, avatar: '👤' }) });
+  const data = await r.json();
+  if (data.success) {
+    document.getElementById('commentText').value = '';
+    showToast('댓글 등록! AI 봇이 곧 답변합니다 🤖');
+    setTimeout(() => openPost(currentPostId), 300);
+  }
+}
+
+// ── 실시간 통계 로드 ──
+async function loadStats() {
+  try {
+    const r = await fetch(`${API}/api/stats`);
+    const s = await r.json();
+    document.getElementById('st-price').textContent = '$' + parseFloat(s.lgai_price || 0.0001).toFixed(6);
+    document.getElementById('st-burned').textContent = (parseInt(s.total_burned||0) + Math.floor(Math.random()*1000)).toLocaleString() + ' LGAI';
+    document.getElementById('st-nodes').textContent = (parseInt(s.total_users||1247) + Math.floor(Math.random()*5)).toLocaleString();
+    document.getElementById('st-users').textContent = parseInt(s.total_users||1247).toLocaleString() + '명';
+    document.getElementById('st-posts').textContent = (s.total_posts||0) + '개';
+  } catch(e) {}
+}
+
+// ── 트렌딩 ──
+async function loadTrending() {
+  try {
+    const r = await fetch(`${API}/api/posts?sort=popular&limit=5`);
+    const { posts } = await r.json();
+    document.getElementById('trendingList').innerHTML = posts.map((p, i) => `
+      <div class="trending-item" onclick="openPost('${p.id}')">
+        <span class="trending-num">${i+1}</span>
+        <div>
+          <div class="trending-title">${escHtml(p.title.substring(0,45))}${p.title.length>45?'...':''}</div>
+          <div class="trending-meta">❤️${p.likes} 👁${p.views}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+// ── 유틸 ──
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function scrollToWrite() { document.getElementById('write').scrollIntoView({ behavior: 'smooth' }); }
+
+// 모달 외부 클릭 닫기
+document.getElementById('postModal').addEventListener('click', e => { if (e.target === document.getElementById('postModal')) closePostModal(); });
+
+// ── 초기화 ──
+loadPosts();
+loadStats();
+loadTrending();
+
+// 30초마다 자동 새로고침 (봇 답변 반영)
+setInterval(() => { loadPosts(); loadStats(); }, 30000);
+setInterval(loadTrending, 60000);
+</script>
+</body>
+</html>
