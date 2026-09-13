@@ -7,6 +7,13 @@
   <meta name="description" content="LGAI 공식 커뮤니티. DePIN, RWA, SocialFi, 옴니체인 AI에 대한 모든 토론과 정보를 공유하세요." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <script>
+    // 최초 접속 시 기본 언어를 영어(English)로 강제 설정
+    if (document.cookie.indexOf('googtrans') === -1) {
+      document.cookie = 'googtrans=/ko/en; path=/';
+      document.cookie = 'googtrans=/ko/en; domain=' + location.hostname + '; path=/';
+    }
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
