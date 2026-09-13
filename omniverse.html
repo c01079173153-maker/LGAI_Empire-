@@ -415,12 +415,51 @@
           <span data-i18n="omni_apr_label">Current APR</span>
           <span class="si-val">~38%</span>
         </div>
-      </div>
       <button class="btn-primary full-width" onclick="calcStake()" data-i18n="omni_btn">Connect Wallet &amp; Stake</button>
     </div>
   </div>
 
-  <!-- SCRIPTS: i18n 먼저, 그 다음 메인 JS -->
+  <!-- SWAP / BUY -->
+  <section id="swap" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Buy <span class="gradient-text">LGAI</span></h2>
+      <p class="section-desc">Join the autonomous empire. Swap USDT directly for LGAI.</p>
+    </div>
+    <div style="max-width: 450px; margin: 0 auto; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 24px; padding: 1.5rem; position: relative; box-shadow: 0 0 40px rgba(124,58,237,0.1);">
+      <div style="display:flex; justify-content:space-between; margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem;">
+        <span>Swap</span>
+        <span>⚙️</span>
+      </div>
+      
+      <div style="background: rgba(0,0,0,0.4); border-radius: 16px; padding: 1rem; margin-bottom: 0.5rem; border: 1px solid var(--border);">
+        <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem;">You pay</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <input type="number" placeholder="0.0" style="background:transparent; border:none; color:white; font-size: 1.8rem; width: 60%; outline: none; font-family: inherit;" />
+          <div style="background: rgba(255,255,255,0.1); padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem;">
+            USDT
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: -10px 0; position: relative; z-index: 2;">
+        <span style="background: #0a0d1a; padding: 0.5rem; border-radius: 50%; border: 1px solid var(--border); display: inline-block;">↓</span>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.4); border-radius: 16px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid var(--border);">
+        <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem;">You receive</div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <input type="number" placeholder="0.0" disabled style="background:transparent; border:none; color:white; font-size: 1.8rem; width: 60%; outline: none; font-family: inherit;" />
+          <div style="background: rgba(124,58,237,0.2); color: #a78bfa; padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem;">
+            LGAI
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary full-width" onclick="alert('⚡ Phase 3 Pre-sale is launching soon. Connect wallet features will be activated in the upcoming update!')" style="width: 100%; padding: 1rem; border-radius: 16px; font-size: 1.1rem;">Connect Wallet to Swap</button>
+    </div>
+  </section>
+
+  <!-- SCRIPTS: i18n 먼저, 다음 메인 JS -->
   <script src="i18n.js"></script>
   <script src="omniverse.js"></script>
 </body>
