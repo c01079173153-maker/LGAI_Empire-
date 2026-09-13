@@ -144,6 +144,17 @@
 
     /* RESPONSIVE */
     @media(max-width:900px) { .layout { grid-template-columns: 1fr; } .sidebar-left, .sidebar-right { display: none; } }
+
+    /* CUSTOM LANG SELECTOR */
+    .custom-lang-selector { position: relative; margin-left: auto; margin-right: 1rem; }
+    .lang-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; list-style: none; padding: 0.5rem; min-width: 150px; z-index: 200; margin-top: 0.5rem; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+    .lang-menu.show { display: block; }
+    .lang-menu li { padding: 0.5rem 1rem; font-size: 0.85rem; cursor: pointer; border-radius: 6px; transition: var(--tr); color: var(--muted); }
+    .lang-menu li:hover { background: rgba(124,58,237,0.2); color: var(--text); }
+    /* Hide default Google Translate widget & top banner */
+    #google_translate_element { display: none !important; }
+    .goog-te-banner-frame.skiptranslate { display: none !important; }
+    body { top: 0px !important; }
   </style>
 </head>
 <body>
@@ -153,8 +164,22 @@
   <div class="nav-inner">
     <a class="nav-logo" href="omniverse.html">Legion<span>AI</span>&nbsp;<small class="nav-badge"><span class="live-dot"></span>LIVE</small></a>
     
-    <!-- 10개 국어 실시간 번역 위젯 -->
-    <div id="google_translate_element" style="margin-left:auto; margin-right:1rem;"></div>
+    <!-- 10개 국어 커스텀 번역 위젯 -->
+    <div id="google_translate_element"></div>
+    <div class="custom-lang-selector">
+      <button id="langBtn" class="btn btn-ghost" style="padding: 0.4rem 1rem;">🌐 Language</button>
+      <ul id="langMenu" class="lang-menu">
+        <li data-lang="en">English</li>
+        <li data-lang="ko">한국어 (Korean)</li>
+        <li data-lang="ja">日本語 (Japanese)</li>
+        <li data-lang="zh-CN">中文 (Chinese)</li>
+        <li data-lang="es">Español (Spanish)</li>
+        <li data-lang="fr">Français (French)</li>
+        <li data-lang="de">Deutsch (German)</li>
+        <li data-lang="ru">Русский (Russian)</li>
+        <li data-lang="ar">العربية (Arabic)</li>
+      </ul>
+    </div>
 
     <ul class="nav-links">
       <li><a href="omniverse.html">← 홈으로</a></li>
@@ -501,6 +526,29 @@ function scrollToWrite() { document.getElementById('write').scrollIntoView({ beh
 
 // 모달 외부 클릭 닫기
 document.getElementById('postModal').addEventListener('click', e => { if (e.target === document.getElementById('postModal')) closePostModal(); });
+
+// ── 커스텀 언어 선택기 ──
+document.getElementById('langBtn').addEventListener('click', () => {
+  document.getElementById('langMenu').classList.toggle('show');
+});
+document.querySelectorAll('.lang-menu li').forEach(li => {
+  li.addEventListener('click', function() {
+    const lang = this.getAttribute('data-lang');
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event('change'));
+    }
+    document.getElementById('langMenu').classList.remove('show');
+    document.getElementById('langBtn').innerHTML = '🌐 ' + this.innerText.split(' ')[0];
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.custom-lang-selector')) {
+    const menu = document.getElementById('langMenu');
+    if (menu) menu.classList.remove('show');
+  }
+});
 
 // ── 초기화 ──
 loadPosts();
