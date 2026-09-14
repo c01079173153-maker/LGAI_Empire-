@@ -4,8 +4,9 @@ const { TwitterApi } = require('twitter-api-v2');
 // ============================================
 // [1] Telegram Broadcasting
 // ============================================
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+// ⚠️ 사령관님의 편의를 위해 직접 하드코딩 주입됨 (자동 배포용)
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "8902754700:AAHYzkBFKkm9tPVh_2RTbtAPekDujHS6FeE";
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || "@LgaiEmpireOfficial";
 
 async function postToTelegram(message) {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
