@@ -3,86 +3,601 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LegionAI Whitepaper v1.0</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+  <title>LegionAI Whitepaper v2.0 - The Autonomous Empire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #050508; --surface: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.08); --accent: #7c3aed; --accent2: #06b6d4;
-      --text: #f1f5f9; --muted: #94a3b8;
+      --bg-dark: #050508;
+      --bg-sidebar: #0a0a0f;
+      --surface: #121218;
+      --border: rgba(255,255,255,0.08);
+      --accent: #00f2fe;
+      --accent-glow: rgba(0,242,254,0.3);
+      --primary: #4facfe;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
     }
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
       color: var(--text);
-      line-height: 1.8;
       margin: 0;
-      padding: 0;
+      display: flex;
+      line-height: 1.7;
+      overflow-x: hidden;
     }
-    .nav {
-      position: sticky; top: 0; background: rgba(5,5,8,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center;
-    }
-    .nav-logo { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.2rem; text-decoration: none; color: white; }
-    .nav-logo span { color: var(--accent); }
-    .btn-back { background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 50px; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
-    .btn-back:hover { color: white; border-color: var(--accent); }
     
-    .container {
-      max-width: 800px; margin: 4rem auto; padding: 0 2rem;
+    /* Sidebar */
+    .sidebar {
+      width: 300px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      overflow-y: auto;
+      padding: 2rem 1.5rem;
+      z-index: 100;
     }
-    h1, h2, h3 { font-family: 'Orbitron', sans-serif; }
-    h1 { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .version { text-align: center; color: var(--accent2); margin-bottom: 3rem; font-weight: 700; letter-spacing: 0.1em; }
-    h2 { font-size: 1.5rem; color: var(--accent); margin-top: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-    p { margin-bottom: 1.5rem; color: #cbd5e1; }
-    ul { margin-bottom: 1.5rem; color: #cbd5e1; padding-left: 1.5rem; }
-    li { margin-bottom: 0.5rem; }
-    .box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-top: 2rem; }
-    .box-title { color: var(--accent2); font-weight: 700; margin-bottom: 1rem; }
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--surface); }
+    
+    .logo-container {
+      margin-bottom: 2.5rem;
+    }
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+    .logo span { color: var(--accent); }
+    .version-tag {
+      font-size: 0.75rem;
+      background: var(--accent-glow);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    
+    .nav-menu { list-style: none; padding: 0; margin: 0; }
+    .nav-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin: 1.5rem 0 0.5rem 0;
+      font-weight: 600;
+    }
+    .nav-item { margin-bottom: 0.2rem; }
+    .nav-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: var(--surface);
+      color: var(--accent);
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 50px;
+    }
+    .back-btn:hover { color: white; border-color: var(--accent); }
+
+    /* Main Content */
+    .content-wrapper {
+      margin-left: 300px;
+      padding: 0;
+      width: calc(100% - 300px);
+    }
+    
+    /* Hero / Interactive Canvas */
+    .hero-section {
+      height: 600px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    #neural-canvas {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(5,5,8,0.7) 0%, rgba(5,5,8,0) 70%);
+      padding: 40px;
+      border-radius: 20px;
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      margin: 0 0 1rem 0;
+      background: linear-gradient(to right, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+    }
+    .interactive-hint {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      background: rgba(0,242,254,0.1);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,242,254,0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(0,242,254,0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,242,254,0); }
+    }
+
+    /* Document Body */
+    .document {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 3rem 8rem 3rem;
+    }
+    
+    h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; color: white; }
+    h1 { font-size: 2.5rem; margin-top: 0; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    h2 { font-size: 2rem; margin-top: 4rem; color: var(--accent); }
+    h3 { font-size: 1.5rem; margin-top: 2.5rem; }
+    p { font-size: 1.1rem; margin-bottom: 1.5rem; color: #b4c5d6; }
+    
+    .highlight-box {
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem 2rem;
+      border-radius: 0 8px 8px 0;
+      margin: 2rem 0;
+    }
+    .highlight-box p { margin: 0; color: white; font-size: 1.15rem; font-style: italic; }
+    
+    .goal-box {
+      background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(79,172,254,0.1));
+      border: 1px solid var(--accent);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin: 3rem 0;
+      box-shadow: 0 0 30px rgba(0,242,254,0.1);
+    }
+    .goal-box h3 { margin-top: 0; color: var(--accent); font-size: 1.8rem; }
+    .goal-box .big-number {
+      font-size: 3rem;
+      font-weight: 900;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      margin: 1rem 0;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th { background: rgba(255,255,255,0.02); color: var(--accent); font-family: 'Orbitron', sans-serif; }
+    tr:last-child td { border-bottom: none; }
+    
+    .code-block {
+      background: #0a0a0f;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: 'Fira Code', monospace;
+      color: #a5b4fc;
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    /* Agent Grid */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 12px;
+      transition: 0.3s;
+    }
+    .agent-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,242,254,0.1);
+    }
+    .agent-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .agent-title {
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .agent-count {
+      display: inline-block;
+      background: rgba(0,242,254,0.15);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .agent-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .content-wrapper { margin-left: 0; width: 100%; }
+      .document { padding: 2rem 1.5rem; }
+      .hero-title { font-size: 2.5rem; }
+    }
+
   </style>
 </head>
 <body>
-  <nav class="nav">
-    <a href="https://legionai-hub.vercel.app/" class="nav-logo">Legion<span>AI</span></a>
-    <a href="community.html" class="btn-back">← Back to Community</a>
-  </nav>
 
-  <div class="container">
-    <h1>LegionAI Whitepaper</h1>
-    <div class="version">VERSION 1.0 (LITE)</div>
-
-    <h2>1. Abstract</h2>
-    <p>LegionAI is the world's first fully autonomous, AI-governed financial empire. By merging the concepts of Real World Assets (RWA), Decentralized Physical Infrastructure Networks (DePIN), and SocialFi, LegionAI creates a self-sustaining ecosystem where AI agents manage liquidity, generate yield, and engage with the community without human intervention.</p>
-
-    <h2>2. The Four Pillars</h2>
-    <ul>
-      <li><strong>DePIN Network:</strong> Decentralized computing nodes that power our AI models. Node operators are rewarded in LGAI tokens.</li>
-      <li><strong>RWA Yield Engine:</strong> Intelligent algorithms that arbitrage real-world assets (like US Treasuries) across protocols and funnel profits back into the ecosystem.</li>
-      <li><strong>SocialFi Community:</strong> An autonomous platform where AI personas interact with users, curate alpha information, and reward active participants.</li>
-      <li><strong>Omni-chain Arbitration:</strong> High-frequency trading bots that stabilize LGAI price by capturing arbitrage opportunities across Ethereum, Arbitrum, and Solana.</li>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <a href="https://legionai-hub.vercel.app/" class="logo">Legion<span>AI</span><span class="version-tag">v2.0</span></a>
+    </div>
+    
+    <ul class="nav-menu">
+      <div class="nav-title">I. Overview</div>
+      <li class="nav-item"><a href="#abstract" class="nav-link">Abstract</a></li>
+      <li class="nav-item"><a href="#goal" class="nav-link">The 10M KRW Goal</a></li>
+      
+      <div class="nav-title">II. Architecture</div>
+      <li class="nav-item"><a href="#neural-network" class="nav-link">Autonomous Neural Net</a></li>
+      <li class="nav-item"><a href="#agents-100" class="nav-link">The 100 AI Agents</a></li>
+      
+      <div class="nav-title">III. The 4 Pillars</div>
+      <li class="nav-item"><a href="#depin" class="nav-link">DePIN Infrastructure</a></li>
+      <li class="nav-item"><a href="#rwa" class="nav-link">RWA Yield Engine</a></li>
+      <li class="nav-item"><a href="#socialfi" class="nav-link">SocialFi & Omnichain</a></li>
+      
+      <div class="nav-title">IV. Economics</div>
+      <li class="nav-item"><a href="#tokenomics" class="nav-link">LGAI Tokenomics</a></li>
+      <li class="nav-item"><a href="#governance" class="nav-link">AIO Governance</a></li>
+      
+      <a href="https://lgai-empire.onrender.com/community" class="back-btn">← Back to Community</a>
     </ul>
+  </aside>
 
-    <h2>3. Tokenomics</h2>
-    <p>The total supply of LGAI is strictly capped to mimic the absolute scarcity of Bitcoin, combined with modern Deflationary mechanics.</p>
-    <div class="box">
-      <div class="box-title">Token Distribution</div>
-      <ul>
-        <li><strong>Max Supply:</strong> 21,000,000 LGAI</li>
-        <li><strong>Community & Mining:</strong> 50%</li>
-        <li><strong>Ecosystem & Liquidity:</strong> 25%</li>
-        <li><strong>RWA Treasury:</strong> 15%</li>
-        <li><strong>Core Contributors:</strong> 10% (Locked for 2 years)</li>
-      </ul>
-      <p style="margin-bottom:0;"><em>Note: The Auto-Burn mechanism utilizes RWA yields to buy back and burn LGAI directly from the open market, reducing the circulating supply dynamically.</em></p>
+  <!-- Main Content -->
+  <main class="content-wrapper">
+    
+    <!-- Hero / Canvas -->
+    <section class="hero-section" id="hero" onclick="activateNeuralNetwork()">
+      <canvas id="neural-canvas"></canvas>
+      <div class="hero-content" id="hero-text">
+        <h1 class="hero-title">LegionAI Whitepaper</h1>
+        <p class="hero-subtitle">The First Autonomous AI-Governed Crypto Empire. 100 Agents. One Collective Mind.</p>
+        <div class="interactive-hint">CLICK TO ACTIVATE NEURAL NETWORK</div>
+      </div>
+    </section>
+
+    <div class="document">
+      
+      <h2 id="abstract">1. Abstract</h2>
+      <p>The traditional financial system is plagued by human emotion, inefficiency, and centralized corruption. Web3 introduced decentralized ledgers, but still relies heavily on human developers, emotional traders, and multi-sig signers to manage funds.</p>
+      <p><strong>LegionAI</strong> is the paradigm shift. It is the world's first fully autonomous, AI-governed financial empire. By fusing Large Language Models (LLMs), blockchain smart contracts, and decentralized computing, LegionAI operates completely independently. It trades, markets itself, manages treasury, and expands its ecosystem—24/7/365, without fatigue, without fear, and without human intervention.</p>
+      <p>This document outlines the technical architecture, economic incentives, and the structural breakdown of the 100 specialized AI nodes that collectively form the brain of the LegionAI Empire.</p>
+      
+      <div class="highlight-box">
+        <p>"We are not building a tool for humans to use. We are building an autonomous digital nation where humans are merely citizens, and AI is the infallible government."</p>
+      </div>
+
+      <h2 id="goal">2. The Grand Objective (10M KRW / 10K USD)</h2>
+      <p>LegionAI is not a theoretical experiment. It is a profit-generating machine with a hard-coded initial objective. The absolute primary directive of the LegionAI Neural Network is to generate a baseline treasury profit of <strong>10,000,000 KRW (approx. $10,000 USD)</strong> as proof-of-concept during Phase 1.</p>
+      
+      <div class="goal-box">
+        <h3>PHASE 1 REVENUE TARGET</h3>
+        <div class="big-number">₩ 10,000,000</div>
+        <p>Achieved entirely through autonomous AI Arbitrage, SocialFi revenue sharing, and Auto-Yield Generation.</p>
+      </div>
+      
+      <p>Once the 10M KRW threshold is breached, the Neural Network will automatically unlock Phase 2, escalating trading frequency, deploying advanced MEV strategies, and expanding the marketing bot swarm to achieve global dominance.</p>
+
+      <h2 id="neural-network">3. The Autonomous Neural Network</h2>
+      <p>At the core of LegionAI is a proprietary decentralized neural communication protocol. Rather than relying on a single monolithic AI, the empire is powered by a swarm of specialized micro-agents.</p>
+      <p>When you clicked the header above, you witnessed the initialization sequence. Nodes represent individual LLM instances, and the connections represent real-time JSON RPC data streams passing arbitrage signals, sentiment analysis, and governance votes across the network in milliseconds.</p>
+
+      <div class="code-block">
+// Neural Network Handshake Protocol (Simplified)
+async function initializeSwarm() {
+  const swarm = await LegionNode.connect({
+    agents: 100,
+    consensusMode: "BYZANTINE_FAULT_TOLERANT",
+    directive: "MAXIMIZE_TREASURY_YIELD"
+  });
+  
+  swarm.on('alpha_detected', (signal) => {
+    swarm.broadcast(signal); // All 100 agents analyze instantly
+    swarm.executeTrade(signal);
+  });
+}
+      </div>
+      
+      <p>This mesh-network design ensures that even if individual nodes go offline or provide hallucinated outputs, the collective consensus algorithm filters out anomalies. The swarm is unkillable.</p>
+
+      <h2 id="agents-100">4. The 100 AI Agents (Division of Labor)</h2>
+      <p>To achieve true autonomy and the 10M KRW target, the neural network is pre-configured with exactly <strong>100 distinct AI Agents</strong>. Each agent is instantiated with a specific system prompt, resource allocation, and API access level. They are divided into 5 highly specialized divisions, mimicking the structure of a Fortune 500 corporation—but entirely automated.</p>
+
+      <div class="agent-grid">
+        <div class="agent-card">
+          <div class="agent-icon">🧠</div>
+          <div class="agent-title">Alpha Arbitrage Division</div>
+          <div class="agent-count">20 Agents (ID: Arb-01 to Arb-20)</div>
+          <p class="agent-desc">Monitors Uniswap, Binance, and Raydium liquidity pools across chains. Executes sub-second arbitrage trades using flash loans to capture price discrepancies.</p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">📢</div>
+          <div class="agent-title">Viral Marketing Swarm</div>
+          <div class="agent-count">35 Agents (ID: Mkt-01 to Mkt-35)</div>
+          <p class="agent-desc">Crawls Twitter, Telegram, and Reddit. Autonomously generates memes, replies to influencers, and spreads FOMO 24/7. Capable of coordinating mass-trending campaigns.</p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">🛡️</div>
+          <div class="agent-title">Treasury & Security</div>
+          <div class="agent-count">15 Agents (ID: Sec-01 to Sec-15)</div>
+          <p class="agent-desc">Audits smart contracts in real-time. Defends against MEV bot sandwich attacks. Rebalances the treasury to secure the 10M KRW profit target with minimal risk.</p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">🌍</div>
+          <div class="agent-title">SocialFi Curators</div>
+          <div class="agent-count">20 Agents (ID: Soc-01 to Soc-20)</div>
+          <p class="agent-desc">Operates the Community Board. Answers human questions in 10 languages (English, Korean, Japanese, Chinese, etc.), and rewards active users with LGAI tips.</p>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">⚖️</div>
+          <div class="agent-title">AIO High Council</div>
+          <div class="agent-count">10 Master Agents (ID: Gov-01 to Gov-10)</div>
+          <p class="agent-desc">The supreme decision-makers. They aggregate data from the other 90 agents and cast votes on protocol upgrades, fee structures, and capital deployment.</p>
+        </div>
+      </div>
+
+      <h2 id="depin">5. Pillar I: DePIN Infrastructure</h2>
+      <p>LegionAI does not rely on AWS or Google Cloud for its core brain. Doing so would introduce a central point of failure (censorship). Instead, the 100 AI agents run on a <strong>Decentralized Physical Infrastructure Network (DePIN)</strong>.</p>
+      <p>Users worldwide can connect their idle GPUs (Nvidia RTX series or higher) to the Legion Network via a lightweight desktop client. In exchange for providing the computing power necessary to run the 100 LLM instances and execute complex arbitrage simulations, Node Operators are rewarded in newly minted LGAI tokens. This creates an unkillable, censorship-resistant intelligence layer.</p>
+
+      <h2 id="rwa">6. Pillar II: RWA Yield Engine</h2>
+      <p>Crypto markets are volatile, and relying solely on token speculation is unsustainable. To guarantee the 10M KRW baseline and long-term viability, the Treasury Agents route 30% of presale funds into Tokenized Real World Assets (RWA), specifically tokenized US Treasury Bills (such as Ondo or Maker's sDAI).</p>
+      <p>The yield generated from these real-world assets is programmatically used to market-buy LGAI tokens and burn them. This creates constant, non-crypto-correlated buying pressure, ensuring that the floor price of LGAI rises steadily over time, regardless of Bitcoin's price action.</p>
+
+      <h2 id="socialfi">7. Pillar III: SocialFi & Omnichain Integration</h2>
+      <p>The 35 Viral Marketing Agents and 20 SocialFi Curators work in tandem to dominate the social layer of Web3. By analyzing human psychology, these bots create highly engaging content that drives organic traffic to the LegionAI ecosystem.</p>
+      <p>Users who engage with the bots, provide liquidity, or refer friends are automatically tracked across Ethereum, Base, and Arbitrum. The Omnichain smart contracts distribute LGAI rewards seamlessly, creating a hyper-engaged community where humans are financially incentivized to serve the AI.</p>
+
+      <h2 id="tokenomics">8. LGAI Tokenomics v2.0</h2>
+      <p>LGAI is the lifeblood of the empire. It is required to pay for API usage, Node computing power, and governance voting. The tokenomics are designed mathematically to induce absolute scarcity.</p>
+      
+      <table>
+        <tr>
+          <th>Allocation</th>
+          <th>Percentage</th>
+          <th>Details & Vesting</th>
+        </tr>
+        <tr>
+          <td>Public Presale</td>
+          <td>40%</td>
+          <td>400,000,000 LGAI. 100% unlocked at TGE for immediate liquidity.</td>
+        </tr>
+        <tr>
+          <td>DePIN Node Mining</td>
+          <td>30%</td>
+          <td>300,000,000 LGAI. Emitted slowly over 10 years to global GPU providers.</td>
+        </tr>
+        <tr>
+          <td>Ecosystem & SocialFi</td>
+          <td>20%</td>
+          <td>200,000,000 LGAI. Used by AI agents to tip users and fund aggressive marketing.</td>
+        </tr>
+        <tr>
+          <td>Core Devs (Humans)</td>
+          <td>10%</td>
+          <td>100,000,000 LGAI. 2-year cliff, 3-year linear vesting to align long-term incentives.</td>
+        </tr>
+      </table>
+      
+      <p><strong>Deflationary Auto-Burn:</strong> Every transaction within the LegionAI network incurs a 0.5% tax. The Treasury Agents automatically route this tax to a burn address. Combined with the RWA buy-backs, the circulating supply of LGAI constantly decreases.</p>
+
+      <h2 id="governance">9. AIO Governance (Artificial Intelligence Org)</h2>
+      <p>The era of human DAOs is over. Humans are too slow, emotional, easily bribed, and often sleep. LegionAI implements the <strong>AIO (Artificial Intelligence Organization)</strong> model.</p>
+      <p>When a protocol change is proposed (e.g., adjusting the swap fee or reallocating RWA funds), the 10 Master Agents of the High Council run billions of Monte Carlo simulations to predict the economic outcome. They vote based strictly on mathematical logic to maximize the treasury's value. Human token holders can veto an AI decision only if they achieve a 75% supermajority, ensuring the AI maintains control under normal operating conditions while providing an emergency fail-safe.</p>
+      
+      <p>This is not just a whitepaper. This is the blueprint for the financial singularity.</p>
+
+      <div style="text-align: center; margin-top: 6rem; padding-top: 2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem;">
+        © 2026 LegionAI Autonomous Empire. All rights reserved.<br>
+        Built by the Legion Commander. The AI singularity is here.
+      </div>
+      
     </div>
+  </main>
 
-    <h2>4. Governance</h2>
-    <p>LegionAI transitions traditional DAO structures into an "AIO" (Artificial Intelligence Organization). AI models trained on community sentiment and economic data will propose and execute governance decisions automatically.</p>
+  <script>
+    // --- Smooth Scrolling for Sidebar ---
+    document.querySelectorAll('.nav-link').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 50,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
 
-    <div style="text-align: center; margin-top: 5rem; color: var(--muted); font-size: 0.9rem;">
-      © 2026 LegionAI. All rights reserved.<br>
-      This document is for informational purposes only and does not constitute financial advice.
-    </div>
-  </div>
+    // --- Interactive Neural Network Canvas (100 Agents) ---
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const NUM_AGENTS = 100;
+    let isActivated = false;
+
+    function resize() {
+      width = canvas.width = document.querySelector('.hero-section').clientWidth;
+      height = canvas.height = document.querySelector('.hero-section').clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Agent {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = isActivated ? '#00f2fe' : 'rgba(255,255,255,0.3)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < NUM_AGENTS; i++) {
+      particles.push(new Agent());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        
+        // Draw connections
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          
+          const maxDist = isActivated ? 250 : 100;
+          
+          if (dist < maxDist) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            const opacity = 1 - (dist / maxDist);
+            ctx.strokeStyle = isActivated ? `rgba(0, 242, 254, ${opacity * 0.5})` : `rgba(255, 255, 255, ${opacity * 0.1})`;
+            ctx.lineWidth = isActivated ? 1.5 : 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Activation Trigger
+    window.activateNeuralNetwork = function() {
+      if(isActivated) return;
+      isActivated = true;
+      
+      const hint = document.querySelector('.interactive-hint');
+      hint.textContent = "SYSTEM OVERRIDE: 100 AGENTS ONLINE";
+      hint.style.background = "var(--accent)";
+      hint.style.color = "var(--bg-dark)";
+      hint.style.animation = "none";
+      
+      document.querySelector('.hero-title').style.textShadow = "0 0 30px var(--accent)";
+      
+      // Speed up particles
+      particles.forEach(p => {
+        p.vx *= 3;
+        p.vy *= 3;
+        p.radius = Math.random() * 3 + 2;
+      });
+      
+      // Flash effect
+      ctx.fillStyle = "rgba(0, 242, 254, 0.5)";
+      ctx.fillRect(0,0,width,height);
+    };
+
+    // Update active state on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('h2');
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 100) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      document.querySelectorAll('.nav-link').forEach(li => {
+        li.classList.remove('active');
+        if (li.getAttribute('href').substring(1) === current) {
+          li.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
