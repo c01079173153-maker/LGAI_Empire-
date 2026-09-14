@@ -91,10 +91,11 @@ app.get('/api/stats', (req, res) => {
 });
 
 // ════════════════════════════════════
-// PAGES
+// PAGES & REDIRECTS
 // ════════════════════════════════════
 app.get('/',          (req, res) => res.sendFile(path.join(__dirname, '..', 'omniverse.html')));
 app.get('/community', (req, res) => res.sendFile(path.join(__dirname, 'public', 'community.html')));
+app.get('/telegram',  (req, res) => res.redirect('https://t.me/LgaiEmpireOfficial')); // 텔레그램 공식 방 리다이렉트
 
 // ══════════════════════════════════════════════════════
 // 🤖 자율 AI 스케줄러 — 24/7 무인 운영
