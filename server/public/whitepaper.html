@@ -282,6 +282,28 @@
       .hero-title { font-size: 2.5rem; }
     }
 
+    /* Neural Tooltip */
+    #neural-tooltip {
+      position: absolute;
+      background: rgba(10,10,15,0.95);
+      border: 1px solid var(--accent);
+      padding: 12px;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.85rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 15px rgba(0,242,254,0.2);
+    }
+    .tt-id { font-family: 'Orbitron', sans-serif; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+    .tt-role { color: #a5b4fc; font-size: 0.8rem; margin-bottom: 4px; }
+    .tt-status { color: #4ade80; }
+    .tt-progress-bar { width: 100%; height: 4px; background: #333; margin-top: 6px; border-radius: 2px; }
+    .tt-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+
   </style>
 </head>
 <body>
@@ -318,12 +340,13 @@
   <main class="content-wrapper">
     
     <!-- Hero / Canvas -->
-    <section class="hero-section" id="hero" onclick="activateNeuralNetwork()">
+    <section class="hero-section" id="hero">
       <canvas id="neural-canvas"></canvas>
-      <div class="hero-content" id="hero-text">
+      <div id="neural-tooltip"></div>
+      <div class="hero-content" id="hero-text" style="pointer-events:none;">
         <h1 class="hero-title">LegionAI Whitepaper</h1>
         <p class="hero-subtitle">The First Autonomous AI-Governed Crypto Empire. 100 Agents. One Collective Mind.</p>
-        <div class="interactive-hint">CLICK TO ACTIVATE NEURAL NETWORK</div>
+        <div class="interactive-hint">DRAG NODES TO INTERACT</div>
       </div>
     </section>
 
@@ -487,10 +510,13 @@ async function initializeSwarm() {
     // --- Interactive Neural Network Canvas (100 Agents) ---
     const canvas = document.getElementById('neural-canvas');
     const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('neural-tooltip');
     let width, height;
     let particles = [];
     const NUM_AGENTS = 100;
-    let isActivated = false;
+
+    const ROLES = ["Alpha Arbitrage", "Viral Marketing", "Treasury & Security", "SocialFi Curator", "AIO High Council"];
+    const TASKS = ["Optimizing Flash Loan Path...", "Generating FOMO Meme...", "Auditing Smart Contract...", "Analyzing Sentiment...", "Voting on Protocol Upgrade...", "Rebalancing Liquidity..."];
 
     function resize() {
       width = canvas.width = document.querySelector('.hero-section').clientWidth;
@@ -500,29 +526,131 @@ async function initializeSwarm() {
     resize();
 
     class Agent {
-      constructor() {
+      constructor(index) {
+        this.id = "Agent-" + String(index + 1).padStart(3, '0');
+        this.role = ROLES[index % ROLES.length];
+        this.task = TASKS[Math.floor(Math.random() * TASKS.length)];
+        this.progress = Math.random() * 100;
+        
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 1;
-        this.vy = (Math.random() - 0.5) * 1;
-        this.radius = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.radius = Math.random() * 3 + 3;
+        this.isHovered = false;
+        this.isDragging = false;
       }
+      
+      evolve() {
+        // Autonomous cloud evolution simulation
+        this.progress += Math.random() * 0.4;
+        if(this.progress >= 100) {
+          this.progress = 0;
+          this.task = TASKS[Math.floor(Math.random() * TASKS.length)];
+        }
+      }
+
       update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
+        this.evolve();
+        
+        if (!this.isDragging) {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
       }
+      
       draw() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isActivated ? '#00f2fe' : 'rgba(255,255,255,0.3)';
+        ctx.arc(this.x, this.y, this.isHovered || this.isDragging ? this.radius * 2 : this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.isHovered || this.isDragging ? '#fff' : '#00f2fe';
+        if(this.isHovered || this.isDragging) {
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = '#00f2fe';
+        } else {
+          ctx.shadowBlur = 0;
+        }
         ctx.fill();
+        ctx.shadowBlur = 0; // reset
       }
     }
 
     for (let i = 0; i < NUM_AGENTS; i++) {
-      particles.push(new Agent());
+      particles.push(new Agent(i));
+    }
+
+    // Interaction State
+    let mouseX = 0, mouseY = 0;
+    let draggedAgent = null;
+    let hoveredAgent = null;
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+
+      if (draggedAgent) {
+        draggedAgent.x = mouseX;
+        draggedAgent.y = mouseY;
+        updateTooltip(draggedAgent, e.clientX, e.clientY);
+        return;
+      }
+
+      // Check hover
+      hoveredAgent = null;
+      for (let p of particles) {
+        p.isHovered = false;
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        if (Math.sqrt(dx*dx + dy*dy) < p.radius * 3 + 5) {
+          hoveredAgent = p;
+        }
+      }
+      
+      if (hoveredAgent) {
+        hoveredAgent.isHovered = true;
+        updateTooltip(hoveredAgent, e.clientX, e.clientY);
+        canvas.style.cursor = 'grab';
+      } else {
+        tooltip.style.opacity = 0;
+        canvas.style.cursor = 'default';
+      }
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      if (hoveredAgent) {
+        draggedAgent = hoveredAgent;
+        draggedAgent.isDragging = true;
+        canvas.style.cursor = 'grabbing';
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      if (draggedAgent) {
+        draggedAgent.isDragging = false;
+        draggedAgent = null;
+        canvas.style.cursor = hoveredAgent ? 'grab' : 'default';
+      }
+    });
+    
+    canvas.addEventListener('mouseleave', () => {
+      if (draggedAgent) draggedAgent.isDragging = false;
+      draggedAgent = null;
+      hoveredAgent = null;
+      tooltip.style.opacity = 0;
+    });
+
+    function updateTooltip(agent, clientX, clientY) {
+      tooltip.style.opacity = 1;
+      tooltip.style.left = (clientX + 15) + 'px';
+      tooltip.style.top = (clientY + 15) + 'px';
+      tooltip.innerHTML = `
+        <div class="tt-id">${agent.id}</div>
+        <div class="tt-role">[${agent.role}]</div>
+        <div class="tt-status">▶ ${agent.task}</div>
+        <div class="tt-progress-bar"><div class="tt-progress-fill" style="width: ${agent.progress}%"></div></div>
+      `;
     }
 
     function animate() {
@@ -530,7 +658,6 @@ async function initializeSwarm() {
       
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
-        particles[i].draw();
         
         // Draw connections
         for (let j = i + 1; j < particles.length; j++) {
@@ -538,47 +665,36 @@ async function initializeSwarm() {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx*dx + dy*dy);
           
-          const maxDist = isActivated ? 250 : 100;
-          
-          if (dist < maxDist) {
+          if (dist < 150) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            const opacity = 1 - (dist / maxDist);
-            ctx.strokeStyle = isActivated ? `rgba(0, 242, 254, ${opacity * 0.5})` : `rgba(255, 255, 255, ${opacity * 0.1})`;
-            ctx.lineWidth = isActivated ? 1.5 : 0.5;
+            const opacity = 1 - (dist / 150);
+            
+            // Highlight connections of hovered/dragged agent
+            if (particles[i].isHovered || particles[j].isHovered || particles[i].isDragging || particles[j].isDragging) {
+              ctx.strokeStyle = `rgba(0, 242, 254, ${opacity})`;
+              ctx.lineWidth = 1.5;
+            } else {
+              ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.15})`;
+              ctx.lineWidth = 0.5;
+            }
             ctx.stroke();
           }
         }
+        particles[i].draw(); // Draw on top of lines
       }
+      
+      // Keep updating tooltip progress if showing
+      if ((hoveredAgent || draggedAgent) && tooltip.style.opacity == 1) {
+         const active = draggedAgent || hoveredAgent;
+         const fill = tooltip.querySelector('.tt-progress-fill');
+         if(fill) fill.style.width = active.progress + '%';
+      }
+
       requestAnimationFrame(animate);
     }
     animate();
-
-    // Activation Trigger
-    window.activateNeuralNetwork = function() {
-      if(isActivated) return;
-      isActivated = true;
-      
-      const hint = document.querySelector('.interactive-hint');
-      hint.textContent = "SYSTEM OVERRIDE: 100 AGENTS ONLINE";
-      hint.style.background = "var(--accent)";
-      hint.style.color = "var(--bg-dark)";
-      hint.style.animation = "none";
-      
-      document.querySelector('.hero-title').style.textShadow = "0 0 30px var(--accent)";
-      
-      // Speed up particles
-      particles.forEach(p => {
-        p.vx *= 3;
-        p.vy *= 3;
-        p.radius = Math.random() * 3 + 2;
-      });
-      
-      // Flash effect
-      ctx.fillStyle = "rgba(0, 242, 254, 0.5)";
-      ctx.fillRect(0,0,width,height);
-    };
 
     // Update active state on scroll
     window.addEventListener('scroll', () => {
