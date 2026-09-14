@@ -111,8 +111,8 @@ cron.schedule('*/5 * * * *', () => {
   db.randomBoostLikes();
 });
 
-// 매 6시간: 마케팅 콘텐츠 자동 게시
-cron.schedule('0 */6 * * *', () => {
+// 매 15분: 마케팅 콘텐츠 자동 게시 (100인 마케팅 스웜 텔레그램 홍보)
+cron.schedule('*/15 * * * *', () => {
   scheduler.postMarketingContent(db).catch(console.error);
 });
 
@@ -142,6 +142,10 @@ app.listen(PORT, () => {
   console.log('╚══════════════════════════════════════════════════╝');
   console.log('');
 
-  // 첫 실행 시 시드 데이터 삽입
-  setTimeout(() => scheduler.seedInitialContent(db), 1500);
+  // 첫 실행 시 시드 데이터 삽입 및 즉시 마케팅 봇 활성화
+  setTimeout(() => {
+    scheduler.seedInitialContent(db);
+    // 서버 부팅 시 텔레그램 즉시 발사
+    setTimeout(() => scheduler.postMarketingContent(db), 3000);
+  }, 1500);
 });
