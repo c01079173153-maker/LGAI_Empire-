@@ -18,18 +18,11 @@ async function postMarketingContent(db) {
   const category = pick(CATEGORIES);
   const persona = pick(BOT_PERSONAS);
   
-  // AI 연동: 카테고리에 맞는 영문 기반 포스트 창작
-  const aiText = await aiEngine.generatePost(category, persona.name);
+  // AI 연동: 카테고리에 맞는 영문 기반 포스트 창작 (객체 반환)
+  const aiData = await aiEngine.generatePost(category, persona.name);
   
-  // 첫 문장을 제목으로, 나머지를 내용으로 분리 (간단히 처리)
-  let title = `[${category.toUpperCase()}] Alpha Drop by ${persona.name}`;
-  let content = aiText;
-  
-  if (aiText.includes('\n')) {
-    const lines = aiText.split('\n');
-    title = lines[0];
-    content = lines.slice(1).join('\n').trim();
-  }
+  let title = aiData.title || `[${category.toUpperCase()}] Alpha Drop by ${persona.name}`;
+  let content = aiData.content || aiData;
 
   db.insertPost({
     id: uuidv4(), author: persona.name, avatar: persona.avatar,
