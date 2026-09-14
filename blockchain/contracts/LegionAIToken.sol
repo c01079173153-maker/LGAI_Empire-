@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract LegionAIToken is ERC20, Ownable {
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 10**18;
+    uint256 public constant TARGET_SUPPLY = 500_000_000 * 10**18; // 50% of MAX_SUPPLY
     uint256 public constant BURN_RATE = 50; // 0.5% (basis points: 50 / 10000)
 
     // Exempt from burn (e.g., presale contract, owner)
@@ -39,9 +40,15 @@ contract LegionAIToken is ERC20, Ownable {
             return;
         }
 
-        // Apply auto-burn if neither sender nor receiver is excluded
-        if (!isExcludedFromBurn[from] && !isExcludedFromBurn[to]) {
+        // Apply auto-burn if neither sender nor receiver is excluded, AND total supply hasn't reached the target
+        if (!isExcludedFromBurn[from] && !isExcludedFromBurn[to] && totalSupply() > TARGET_SUPPLY) {
             uint256 burnAmount = (value * BURN_RATE) / 10000;
+            
+            // Ensure we don't burn past the TARGET_SUPPLY
+            if (totalSupply() - burnAmount < TARGET_SUPPLY) {
+                burnAmount = totalSupply() - TARGET_SUPPLY;
+            }
+
             uint256 sendAmount = value - burnAmount;
 
             super._update(from, to, sendAmount);
