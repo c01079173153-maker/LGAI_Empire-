@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
-const aiEngine = require('./ai_engine'); // 추가된 AI 코어 엔진 연동
+const aiEngine = require('./ai_engine');
+const broadcaster = require('./broadcaster'); // 마케팅 브로드캐스터 추가
 
 function fmt(n) { return Math.floor(n).toLocaleString(); }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -32,7 +33,7 @@ async function postMarketingContent(db) {
 
   db.insertPost({
     id: uuidv4(), author: persona.name, avatar: persona.avatar,
-    lang: 'en', category: category, // AI가 기본 영어를 쓰므로 en으로 세팅
+    lang: 'en', category: category,
     title: title.slice(0, 100), content: content.slice(0, 3000),
     is_bot: 1, is_pinned: 0,
     likes: Math.floor(Math.random()*40+10),
@@ -41,6 +42,9 @@ async function postMarketingContent(db) {
   
   db.randomBoostLikes();
   console.log(`  📢 [AI-SCHEDULER] Post published in '${category}' by @${persona.name}`);
+  
+  // 텔레그램 및 트위터로 동시 브로드캐스팅!
+  await broadcaster.broadcast(title, content);
 }
 
 async function postDailyBurnAnnouncement(db) {
