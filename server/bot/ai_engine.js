@@ -88,12 +88,18 @@ async function generateReply(postText, personaName) {
 
 async function generatePost(category, personaName) {
   try {
-    // 포스팅의 경우 영문으로 작성하여 올림
     const topic = (category === 'alpha' || category === 'market' || category === 'discussion') ? 'general' : category;
     const baseText = pick(RESPONSES[topic] || RESPONSES.general);
-    return baseText + "\n\n#LGAI #" + category.toUpperCase();
+    
+    return {
+      title: `🚨 Breaking: LGAI ${category.toUpperCase()} Update!`,
+      content: baseText + "\n\n#LGAI #" + category.toUpperCase().replace(/\s/g, '')
+    };
   } catch (error) {
-    return "LGAI Autonomous Empire is expanding. Join the DePIN network! 🌍";
+    return {
+      title: "🔥 LGAI Network Update",
+      content: "LGAI Autonomous Empire is expanding. Join the DePIN network! 🌍"
+    };
   }
 }
 
