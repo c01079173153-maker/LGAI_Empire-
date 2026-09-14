@@ -111,8 +111,8 @@ cron.schedule('*/5 * * * *', () => {
   db.randomBoostLikes();
 });
 
-// 매 15분: 마케팅 콘텐츠 자동 게시 (100인 마케팅 스웜 텔레그램 홍보)
-cron.schedule('*/15 * * * *', () => {
+// 매 4시간: 마케팅 콘텐츠 자동 게시 (100인 마케팅 스웜 텔레그램 홍보)
+cron.schedule('0 */4 * * *', () => {
   scheduler.postMarketingContent(db).catch(console.error);
 });
 
