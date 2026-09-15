@@ -15,29 +15,41 @@ const BOT_PERSONAS = [
 const CATEGORIES = ['depin', 'rwa', 'socialfi', 'alpha', 'market', 'discussion'];
 
 async function postMarketingContent(db) {
-  const category = pick(CATEGORIES);
-  const persona = pick(BOT_PERSONAS);
-  
-  // AI 연동: 카테고리에 맞는 영문 기반 포스트 창작 (객체 반환)
-  const aiData = await aiEngine.generatePost(category, persona.name);
-  
-  let title = aiData.title || `[${category.toUpperCase()}] Alpha Drop by ${persona.name}`;
-  let content = aiData.content || aiData;
+  try {
+    const category = pick(CATEGORIES);
+    const persona = pick(BOT_PERSONAS);
+    
+    // AI 연동: 카테고리에 맞는 영문 기반 포스트 창작 (객체 반환)
+    const aiData = await aiEngine.generatePost(category, persona.name);
+    
+    let title = aiData.title || `[${category.toUpperCase()}] Alpha Drop by ${persona.name}`;
+    let content = aiData.content || aiData;
 
-  db.insertPost({
-    id: uuidv4(), author: persona.name, avatar: persona.avatar,
-    lang: 'en', category: category,
-    title: title.slice(0, 100), content: content.slice(0, 3000),
-    is_bot: 1, is_pinned: 0,
-    likes: Math.floor(Math.random()*40+10),
-    views: Math.floor(Math.random()*300+80)
-  });
-  
-  db.randomBoostLikes();
-  console.log(`  📢 [AI-SCHEDULER] Post published in '${category}' by @${persona.name}`);
-  
-  // 텔레그램 및 트위터로 동시 브로드캐스팅!
-  await broadcaster.broadcast(title, content);
+    // Twitter (X) 포스팅용 데이터 준비 (280자 제한)
+    const twitterContent = content.length > 270 ? content.slice(0, 270) + "..." : content;
+
+    db.insertPost({
+      id: uuidv4(), author: persona.name, avatar: persona.avatar,
+      lang: 'en', category: category,
+      title: title.slice(0, 100), content: content.slice(0, 3000),
+      is_bot: 1, is_pinned: 0,
+      likes: Math.floor(Math.random()*40+10),
+      views: Math.floor(Math.random()*300+80)
+    });
+    
+    db.randomBoostLikes();
+    console.log(`  📢 [AI-SCHEDULER] Post published in '${category}' by @${persona.name}`);
+    
+    // 텔레그램 브로드캐스팅 (MarkdownV2 특수문자 방어 로직은 broadcaster 내부에 구현)
+    await broadcaster.broadcast(title, content);
+    
+    // TODO: Phase 12 - Twitter (X) API 연동 시 주석 해제
+    // await aiEngine.postToTwitter(title, twitterContent);
+
+  } catch (error) {
+    console.error("  ❌ [AI-SCHEDULER] Error during marketing post generation:", error.message);
+    // 에러 발생 시 서버가 죽지 않고 자가 복구(Skip) 하도록 방어
+  }
 }
 
 async function postDailyBurnAnnouncement(db) {

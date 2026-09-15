@@ -103,4 +103,18 @@ async function generatePost(category, personaName) {
   }
 }
 
-module.exports = { generateReply, generatePost };
+async function postToTwitter(title, content) {
+  try {
+    console.log(`  🐦 [AI-ENGINE] Preparing to post to Twitter...`);
+    console.log(`     [X] Tweet: ${content}`);
+    // 실제 Twitter API V2 연동 코드가 들어갈 자리
+    // const client = new TwitterApi({ appKey, appSecret, accessToken, accessSecret });
+    // await client.v2.tweet(content);
+    return true;
+  } catch (error) {
+    console.error(`  ❌ [AI-ENGINE] Twitter API failed:`, error.message);
+    return false;
+  }
+}
+
+module.exports = { generateReply, generatePost, postToTwitter };
