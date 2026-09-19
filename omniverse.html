@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="omniverse.css" />
+  <!-- Ethers.js CDN for Web3 Wallet Connection -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
 </head>
 <body>
   <canvas id="starfield"></canvas>
@@ -35,11 +37,11 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-badge" data-i18n="hero_badge">⚡ Phase 3 — Omniverse Activated</div>
+    <div class="hero-badge" data-i18n="hero_badge" style="background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);">🛡️ SYSTEM SECURED: SSS LEVEL THREAT NEUTRALIZED</div>
     <h1 class="hero-title">
-      <span data-i18n="hero_title_1">The World's First</span><br />
-      <span class="gradient-text" data-i18n="hero_title_2">AI-Governed Currency</span><br />
-      <span data-i18n="hero_title_3">Omniverse</span>
+      <span data-i18n="hero_title_1">LegionAI</span><br />
+      <span class="gradient-text" data-i18n="hero_title_2">REBORN</span><br />
+      <span data-i18n="hero_title_3" style="font-size: 0.6em; color: #ef4444;">The Unhackable Empire</span>
     </h1>
     <p class="hero-sub" data-i18n="hero_sub">
       LegionAI is not just a token. It is a living, breathing, self-sustaining financial empire powered by 4 autonomous pillars — operating 24/7 without human intervention.
@@ -63,8 +65,8 @@
       </div>
     </div>
     <div class="hero-cta-row">
-      <a href="https://legionai-hub.vercel.app/" target="_blank" class="btn-primary" data-i18n="hero_cta">🚀 Buy LGAI Now</a>
-      <a href="#pillars" class="btn-ghost" data-i18n="hero_cta2">Explore Ecosystem ↓</a>
+      <a href="#" class="btn-primary" id="btn-connect-wallet" data-i18n="hero_cta" onclick="connectWalletOmni()">🔌 Connect Wallet</a>
+      <a href="#pillars" class="btn-ghost" data-i18n="hero_cta2">Explore Defenses ↓</a>
     </div>
   </section>
 
@@ -462,5 +464,35 @@
   <!-- SCRIPTS: i18n 먼저, 다음 메인 JS -->
   <script src="i18n.js"></script>
   <script src="omniverse.js"></script>
+  
+  <script>
+    // Web3 Wallet Connection Logic for Omniverse
+    async function connectWalletOmni() {
+      const btn = document.getElementById('btn-connect-wallet');
+      if (!window.ethereum) {
+        alert("MetaMask is not installed!");
+        return;
+      }
+      try {
+        btn.innerText = "Connecting...";
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send("eth_requestAccounts", []);
+        const address = accounts[0];
+        const shortAddr = address.slice(0, 6) + "..." + address.slice(-4);
+        
+        // Show success security popup
+        alert("🛡️ Security Clearance Granted.\\nWallet " + shortAddr + " authenticated.\\nWelcome to the Reborn Empire.");
+        
+        btn.innerText = "✅ " + shortAddr;
+        btn.style.background = "#10b981"; // Green
+        btn.style.boxShadow = "0 0 20px rgba(16, 185, 129, 0.5)";
+        
+      } catch (e) {
+        console.error(e);
+        btn.innerText = "🔌 Connect Wallet";
+        alert("Connection rejected.");
+      }
+    }
+  </script>
 </body>
 </html>

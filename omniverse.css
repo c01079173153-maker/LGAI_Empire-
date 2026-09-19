@@ -5,17 +5,21 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #050508;
+  --bg: #0a0505;
   --bg2: #080b14;
-  --surface: rgba(255,255,255,0.04);
+  --bg-nav: rgba(10, 5, 5, 0.85);
+  --surface: rgba(255, 255, 255, 0.03);
   --surface-hover: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --accent: #7c3aed;
-  --accent2: #06b6d4;
-  --accent3: #f59e0b;
+  --border: rgba(255, 255, 255, 0.1);
+  
+  /* REBORN THEME: Red and Gold */
+  --cyan: #ef4444; /* Red */
+  --purple: #f59e0b; /* Gold */
+  --accent: #ef4444;
+  --accent2: #f59e0b;
+  --accent3: #fbbf24;
   --gold: #fbbf24;
   --green: #10b981;
-  --text: #f1f5f9;
   --text-muted: #94a3b8;
   --depin: #06b6d4;
   --rwa: #f59e0b;

@@ -1,4 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
+// 보안 철칙: .env 파일에만 실제 키를 보관하며 깃허브에 올리지 않습니다.
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -6,7 +10,12 @@ module.exports = {
   networks: {
     sepolia: {
       url: "https://ethereum-sepolia-rpc.publicnode.com",
-      accounts: ["0x2c4223c3c9e0dec6c5a716f25da215cb8eda2a3a334b373f7dd046e6ed747430"]
+      accounts: [PRIVATE_KEY]
+    },
+    bsc: {
+      url: "https://bsc-dataseed.binance.org/",
+      chainId: 56,
+      accounts: [PRIVATE_KEY] // .env에서 안전하게 불러옵니다
     }
   },
   etherscan: {
