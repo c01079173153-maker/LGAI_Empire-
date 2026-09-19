@@ -343,8 +343,8 @@
       ]
     },
     "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\LegionAIToken.sol": {
-      "lastModificationDate": 1789789215852,
-      "contentHash": "96d8436d71375bebfe8bddffad9e43dc",
+      "lastModificationDate": 1789789894774,
+      "contentHash": "a0986019366a2dbf968483f408f9949f",
       "sourceName": "contracts/LegionAIToken.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -372,13 +372,52 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Pausable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
       ],
       "artifacts": [
         "LegionAIToken"
+      ]
+    },
+    "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Pausable.sol": {
+      "lastModificationDate": 1789393746534,
+      "contentHash": "0d47b53e10b1985efbb396f937626279",
+      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Pausable"
       ]
     }
   }

@@ -3,13 +3,14 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title LegionAIToken
  * @dev ERC20 Token for LegionAI (LGAI) with an auto-burn mechanism.
  * 1 Billion Total Supply. 0.5% burn on every transfer.
  */
-contract LegionAIToken is ERC20, Ownable {
+contract LegionAIToken is ERC20, Ownable, Pausable {
     uint256 public constant MAX_SUPPLY = 1_000_000_000 * 10**18;
     uint256 public constant TARGET_SUPPLY = 500_000_000 * 10**18; // 50% of MAX_SUPPLY
     uint256 public constant BURN_RATE = 50; // 0.5% (basis points: 50 / 10000)
@@ -46,10 +47,24 @@ contract LegionAIToken is ERC20, Ownable {
     }
 
     /**
-     * @dev Overrides the standard ERC20 _update function to implement the auto-burn mechanism
-     * and enforce the Anti-Bot Blacklist.
+     * @dev EMERGENCY KILL SWITCH: Pauses all token transfers.
      */
-    function _update(address from, address to, uint256 value) internal virtual override {
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev EMERGENCY KILL SWITCH: Unpauses all token transfers.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    /**
+     * @dev Overrides the standard ERC20 _update function to implement the auto-burn mechanism
+     * and enforce the Anti-Bot Blacklist & Pausable state.
+     */
+    function _update(address from, address to, uint256 value) internal virtual override whenNotPaused {
         // Enforce Anti-Bot Blacklist
         require(!isBlacklisted[from], "AntiBot: Sender is blacklisted");
         require(!isBlacklisted[to], "AntiBot: Receiver is blacklisted");
