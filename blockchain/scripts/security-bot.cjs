@@ -23,7 +23,7 @@ async function startUltimateSecurityBot() {
         ? new ethers.Wallet(process.env.SECURITY_ADMIN_PRIVATE_KEY, provider)
         : ethers.Wallet.createRandom().connect(provider); // 시뮬레이션용 임시 지갑
 
-    const tokenAddress = process.env.TOKEN_ADDRESS || "0xYOUR_TOKEN_ADDRESS_HERE";
+    const tokenAddress = process.env.TOKEN_ADDRESS || "0x0000000000000000000000000000000000000000";
     const tokenAbi = ["function setBlacklist(address account, bool status) external"];
     const legionToken = new ethers.Contract(tokenAddress, tokenAbi, adminWallet);
 
