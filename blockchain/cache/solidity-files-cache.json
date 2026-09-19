@@ -343,8 +343,8 @@
       ]
     },
     "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\LegionAIToken.sol": {
-      "lastModificationDate": 1789394266284,
-      "contentHash": "4ff31571b2b9edaa0e1d3f60e1a3e662",
+      "lastModificationDate": 1789788642284,
+      "contentHash": "f615156e411cf25e808a93232151caca",
       "sourceName": "contracts/LegionAIToken.sol",
       "solcConfig": {
         "version": "0.8.20",

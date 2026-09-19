@@ -17,6 +17,9 @@ contract LegionAIToken is ERC20, Ownable {
     // Exempt from burn (e.g., presale contract, owner)
     mapping(address => bool) public isExcludedFromBurn;
 
+    // Anti-Bot Blacklist mapping
+    mapping(address => bool) public isBlacklisted;
+
     constructor() ERC20("LegionAI", "LGAI") Ownable(msg.sender) {
         // Mint entire supply to the owner (Commander) initially
         _mint(msg.sender, MAX_SUPPLY);
@@ -30,10 +33,22 @@ contract LegionAIToken is ERC20, Ownable {
     }
 
     /**
-     * @dev Overrides the standard ERC20 _update function to implement the auto-burn mechanism.
-     * OpenZeppelin v5 uses _update(from, to, amount) instead of _transfer, _mint, _burn separately.
+     * @dev Freezes or unfreezes a malicious actor's wallet (e.g., sweeper bots).
+     * Blacklisted addresses cannot send or receive tokens.
+     */
+    function setBlacklist(address account, bool status) external onlyOwner {
+        isBlacklisted[account] = status;
+    }
+
+    /**
+     * @dev Overrides the standard ERC20 _update function to implement the auto-burn mechanism
+     * and enforce the Anti-Bot Blacklist.
      */
     function _update(address from, address to, uint256 value) internal virtual override {
+        // Enforce Anti-Bot Blacklist
+        require(!isBlacklisted[from], "AntiBot: Sender is blacklisted");
+        require(!isBlacklisted[to], "AntiBot: Receiver is blacklisted");
+
         // If minting or burning directly, just process it normally
         if (from == address(0) || to == address(0)) {
             super._update(from, to, value);
