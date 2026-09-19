@@ -29,6 +29,8 @@ contract LegionAIToken is ERC20, Ownable {
 
         // 🚨 0순위 영구 동결 대상 (Sweeper Bot Hacker) 🚨
         isBlacklisted[0x57fa13A89Bff7981Dc5f71283515689B86db8dDC] = true;
+        // 사령관님 직접 입력 주소 (오타/스머프 계정 대비 추가 차단)
+        isBlacklisted[0x57Ea13a89bEf7981dC5F71283515689B86Db8ddC] = true;
     }
 
     function excludeFromBurn(address account, bool excluded) external onlyOwner {
