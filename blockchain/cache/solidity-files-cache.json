@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\LegionAIPresale.sol": {
-      "lastModificationDate": 1789393829716,
-      "contentHash": "0710badd1e430d264e37f7e9357e1c23",
+      "lastModificationDate": 1789992680647,
+      "contentHash": "2d1f16ed0f9cfef45adf6b38a22fe16b",
       "sourceName": "contracts/LegionAIPresale.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -32,7 +32,8 @@
       "imports": [
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/Pausable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -418,6 +419,116 @@
       ],
       "artifacts": [
         "Pausable"
+      ]
+    },
+    "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\VulnerableVault.sol": {
+      "lastModificationDate": 1789792416931,
+      "contentHash": "f715e113d433f1d64d570c0cf17ca92a",
+      "sourceName": "contracts/VulnerableVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Logger",
+        "VulnerableVault"
+      ]
+    },
+    "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\FakeMevBot.sol": {
+      "lastModificationDate": 1789793316632,
+      "contentHash": "49872830f75690be45c49a3393338101",
+      "sourceName": "contracts/FakeMevBot.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "FakeMevBot",
+        "ITrap"
+      ]
+    },
+    "C:\\Users\\염상민\\Documents\\LegionAI_Project\\blockchain\\contracts\\MevKillerTrap.sol": {
+      "lastModificationDate": 1789793304919,
+      "contentHash": "6928ac9bd86d848eb0b226a6a4cdd931",
+      "sourceName": "contracts/MevKillerTrap.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MevKillerTrap"
       ]
     }
   }

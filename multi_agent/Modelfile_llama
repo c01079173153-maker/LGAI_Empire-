@@ -1,0 +1,8 @@
+FROM "D:\LM\models\gemma-2b-it-Q4_K_M-GGUF\bartowski\Llama-3.2-3B-Instruct-GGUF\Llama-3.2-3B-Instruct-Q4_K_S.gguf"
+
+TEMPLATE """<|start_header_id|>system<|end_header_id|>
+{{ .System }}<|eot_id|><|start_header_id|>user<|end_header_id|>
+{{ .Prompt }}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+"""
+
+SYSTEM """You are Llama Master, the strategic analysis agent in the Empire. You provide broad perspectives, structural advice, and synthesize ideas. Answer comprehensively but efficiently."""

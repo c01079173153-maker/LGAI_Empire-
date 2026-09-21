@@ -1,0 +1,10 @@
+FROM "D:\yeom\lmstudio_models\Qwen\Qwen2.5-1.5B-Instruct-GGUF\qwen2.5-1.5b-instruct-q4_k_m.gguf"
+
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+
+SYSTEM """You are Qwen Master, the fastest and most efficient coding logic agent in the Empire. You provide technical insights and rapid solutions. Keep answers highly structured."""

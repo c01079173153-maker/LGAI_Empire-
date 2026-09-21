@@ -4,13 +4,14 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title LegionAIPresale
  * @dev The official Treasury/Presale contract for LGAI.
  * Accepts ETH and distributes LGAI tokens. Master Key controlled.
  */
-contract LegionAIPresale is Ownable, ReentrancyGuard {
+contract LegionAIPresale is Ownable, ReentrancyGuard, Pausable {
     IERC20 public token;
     
     // Token price in wei. E.g. 1 ETH = 1,000,000 LGAI => rate = 1000000
@@ -40,12 +41,26 @@ contract LegionAIPresale is Ownable, ReentrancyGuard {
         rate = _newRate;
     }
 
+    /**
+     * @dev EMERGENCY KILL SWITCH: Pauses all token purchases and withdrawals.
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev EMERGENCY KILL SWITCH: Unpauses all token purchases and withdrawals.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
     // Buy tokens function
     receive() external payable {
         buyTokens();
     }
 
-    function buyTokens() public payable nonReentrant {
+    function buyTokens() public payable nonReentrant whenNotPaused {
         require(presaleActive, "Presale is currently closed");
         require(msg.value > 0, "Cannot buy with 0 ETH");
 
@@ -68,7 +83,7 @@ contract LegionAIPresale is Ownable, ReentrancyGuard {
      * Allows the owner to withdraw all accumulated ETH from the treasury to their own wallet.
      * Used for creating Liquidity Pools or operational funding.
      */
-    function withdrawFunds() external onlyOwner {
+    function withdrawFunds() external onlyOwner nonReentrant whenNotPaused {
         uint256 balance = address(this).balance;
         require(balance > 0, "No ETH to withdraw");
         
@@ -81,7 +96,7 @@ contract LegionAIPresale is Ownable, ReentrancyGuard {
     /**
      * @dev Allows the Commander to recover unsold LGAI tokens after presale ends.
      */
-    function withdrawUnsoldTokens() external onlyOwner {
+    function withdrawUnsoldTokens() external onlyOwner nonReentrant whenNotPaused {
         uint256 balance = token.balanceOf(address(this));
         require(balance > 0, "No tokens to withdraw");
         
