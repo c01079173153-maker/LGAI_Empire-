@@ -307,46 +307,67 @@
 
   <!-- MODAL: DePIN -->
   <div class="modal" id="depinModal">
-    <div class="modal-box">
+    <div class="modal-box" style="max-width: 600px; border: 1px solid var(--depin); box-shadow: 0 0 30px rgba(6,182,212,0.2);">
       <button class="modal-close" onclick="closeModal('depinModal')">✕</button>
-      <div class="modal-icon">⚙️</div>
-      <h3 data-i18n="depin_modal_title">Connect Your DePIN Node</h3>
-      <p data-i18n="depin_modal_desc">Share your CPU/GPU compute power and earn rewards in your favorite currency.</p>
+      <div class="modal-icon" style="color: var(--depin); text-shadow: 0 0 10px var(--depin);">⚙️</div>
+      <h3 data-i18n="depin_modal_title" style="color: white; font-family: 'Orbitron'; text-transform: uppercase;">LGAI Quantum DePIN Node</h3>
+      <p data-i18n="depin_modal_desc" style="color: var(--depin); font-size: 0.8rem; margin-bottom: 1.5rem;">[SYSTEM] Initializing distributed hardware handshake...</p>
       
+      <!-- HARDWARE DETECTOR -->
+      <div class="hardware-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <div style="background: rgba(0,0,0,0.6); padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+          <div style="font-size: 0.65rem; color: var(--text-muted);">DETECTED CPU CORES</div>
+          <div id="hw-cores" style="font-family: 'Orbitron'; font-size: 1.1rem; color: white;">Scanning...</div>
+        </div>
+        <div style="background: rgba(0,0,0,0.6); padding: 0.75rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+          <div style="font-size: 0.65rem; color: var(--text-muted);">GPU / RENDERER</div>
+          <div id="hw-gpu" style="font-family: 'Orbitron'; font-size: 0.9rem; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Scanning...</div>
+        </div>
+      </div>
+
       <div class="form-group">
-        <label>Select Target Asset (What to Mine)</label>
-        <select id="mineTarget" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem 1rem; color: var(--text); font-family: 'Space Grotesk', sans-serif;">
-          <option value="LGAI" selected>LegionAI (LGAI) - Highest APY</option>
-          <option value="BTC">Bitcoin (BTC)</option>
-          <option value="SOL">Solana (SOL)</option>
-          <option value="DOGE">Dogecoin (DOGE)</option>
+        <label style="color: var(--depin); font-size: 0.75rem;">1. SELECT TARGET ASSET</label>
+        <select id="mineTarget" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.75rem 1rem; color: white; font-family: 'Space Grotesk', sans-serif; outline: none;">
+          <option value="LGAI" selected>LGAI (LegionAI) - MAX YIELD (100% Boost)</option>
+          <option value="BTC">BTC (Bitcoin) - SHA256 Alg</option>
+          <option value="SOL">SOL (Solana) - Delegated PoS Mode</option>
+          <option value="DOGE">DOGE (Dogecoin) - Scrypt Alg</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label data-i18n="depin_wallet_label">Your Receiving Wallet Address</label>
-        <input type="text" placeholder="0x... or Bitcoin/Solana Address" id="depinWallet" />
+        <label style="color: var(--depin); font-size: 0.75rem;">2. RECEIVING WALLET ADDRESS</label>
+        <input type="text" placeholder="Enter 0x... or specific coin address" id="depinWallet" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.75rem 1rem; color: white; outline: none;" />
       </div>
 
       <!-- NEW: LIVE MINING STATS -->
-      <div class="mining-dashboard" style="display: none; background: rgba(0,0,0,0.5); padding: 1.5rem; border-radius: var(--radius); border: 1px solid rgba(6,182,212,0.4); margin-bottom: 1rem; text-align: center;">
-        <div style="font-size: 0.8rem; color: var(--depin); margin-bottom: 0.5rem;" class="pulse-dot-depin">🟢 MINING ACTIVE</div>
+      <div class="mining-dashboard" style="display: none; background: rgba(0,0,0,0.8); padding: 1rem; border-radius: 8px; border: 1px solid rgba(16,185,129,0.5); margin-bottom: 1.5rem; position: relative; overflow: hidden;">
+        <div class="scanline"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+          <div style="font-size: 0.75rem; color: #10b981; font-weight: bold;" class="pulse-dot-depin">🟢 SECURE CONNECTION ESTABLISHED</div>
+          <div id="mining-uptime" style="font-family: monospace; font-size: 0.75rem; color: var(--text-muted);">UPTIME: 00:00:00</div>
+        </div>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Real-Time Hashrate</div>
-            <div id="liveHashrate" style="font-family: 'Orbitron'; font-size: 1.5rem; color: white;">0.00</div>
-            <div style="font-size: 0.7rem; color: var(--depin);">KH/s (SHA-256)</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">REAL-TIME HASHRATE</div>
+            <div id="liveHashrate" style="font-family: 'Orbitron'; font-size: 2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.5);">0.00</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">KH/s (SHA-256)</div>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 0.7rem; color: var(--text-muted);">Mined Balance</div>
-            <div id="minedBalance" style="font-family: 'Orbitron'; font-size: 1.5rem; color: var(--gold);">0.00000000</div>
-            <div id="minedSymbol" style="font-size: 0.7rem; color: var(--gold);">LGAI</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">MINED BALANCE</div>
+            <div id="minedBalance" style="font-family: 'Orbitron'; font-size: 1.8rem; color: var(--gold); text-shadow: 0 0 10px rgba(251,191,36,0.5);">0.00000000</div>
+            <div id="minedSymbol" style="font-size: 0.8rem; color: var(--gold); font-weight: bold;">LGAI</div>
           </div>
+        </div>
+
+        <!-- Terminal Logs inside Miner -->
+        <div id="miner-terminal" style="margin-top: 1rem; height: 60px; background: rgba(0,0,0,0.5); padding: 0.5rem; font-family: monospace; font-size: 0.65rem; color: #10b981; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;">
+          <div>[SYSTEM] Waiting for hardware ignition...</div>
         </div>
       </div>
 
-      <button class="btn-primary full-width" id="btnToggleMiner" onclick="toggleMiner()" style="background: rgba(6,182,212,0.2); border: 1px solid var(--depin); color: var(--depin);">🚀 Start Mining Hardware</button>
+      <button class="btn-primary full-width" id="btnToggleMiner" onclick="toggleMiner()" style="background: linear-gradient(135deg, rgba(6,182,212,0.8), rgba(124,58,237,0.8)); border: none; font-size: 1.1rem; letter-spacing: 1px; padding: 1rem; box-shadow: 0 0 20px rgba(6,182,212,0.4);">🚀 IGNITE QUANTUM MINER</button>
     </div>
   </div>
 

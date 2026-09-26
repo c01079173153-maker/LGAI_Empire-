@@ -373,6 +373,34 @@ let minerWorker;
 let isMining = false;
 let minedAmount = 0;
 let hashrateInterval;
+let uptimeInterval;
+let miningStartTime;
+
+// Hardware Detection Simulation
+document.addEventListener('DOMContentLoaded', () => {
+  const hwCores = navigator.hardwareConcurrency || "Unknown";
+  document.getElementById('hw-cores').textContent = `${hwCores} Cores Available`;
+  
+  // Try to get WebGL renderer info for GPU
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    document.getElementById('hw-gpu').textContent = renderer || "Generic WebGL GPU";
+  } catch(e) {
+    document.getElementById('hw-gpu').textContent = "CPU Fallback Mode";
+  }
+});
+
+function logToMinerTerminal(msg) {
+  const terminal = document.getElementById("miner-terminal");
+  if (!terminal) return;
+  const div = document.createElement("div");
+  div.textContent = `> ${msg}`;
+  terminal.appendChild(div);
+  if(terminal.children.length > 4) terminal.removeChild(terminal.firstChild);
+}
 
 function toggleMiner() {
   const btn = document.getElementById("btnToggleMiner");
@@ -383,10 +411,23 @@ function toggleMiner() {
   if (!isMining) {
     // Start Mining
     isMining = true;
-    btn.innerHTML = "🛑 Stop Mining (Releasing GPU)";
+    btn.innerHTML = "🛑 SHUTDOWN MINER (RELEASE RESOURCES)";
+    btn.style.background = "rgba(239, 68, 68, 0.2)";
     btn.style.color = "var(--red)";
-    btn.style.borderColor = "var(--red)";
+    btn.style.boxShadow = "0 0 20px rgba(239, 68, 68, 0.4)";
     dashboard.style.display = "block";
+    
+    logToMinerTerminal("[SYSTEM] Allocating hardware resources...");
+    logToMinerTerminal(`[NETWORK] Connecting to ${targetCoin} Stratum pool...`);
+    
+    miningStartTime = Date.now();
+    uptimeInterval = setInterval(() => {
+      const diff = Date.now() - miningStartTime;
+      const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+      const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+      const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+      document.getElementById('mining-uptime').textContent = `UPTIME: ${h}:${m}:${s}`;
+    }, 1000);
     
     if (typeof(Worker) !== "undefined") {
       if (!minerWorker) {
@@ -404,9 +445,14 @@ function toggleMiner() {
             
             minedAmount += (e.data.hashes * multiplier);
             document.getElementById("minedBalance").textContent = minedAmount.toFixed(8);
+            
+            if (Math.random() > 0.8) {
+              logToMinerTerminal(`[WORKER] Block template received. Hash: ${khs} KH/s`);
+            }
           }
         };
       }
+      setTimeout(() => { logToMinerTerminal("[SYSTEM] Ignition successful. Commencing hashes."); }, 1000);
       minerWorker.postMessage({ command: 'START' });
       
       hashrateInterval = setInterval(() => {
@@ -419,14 +465,18 @@ function toggleMiner() {
   } else {
     // Stop Mining
     isMining = false;
-    btn.innerHTML = "🚀 Start Mining Hardware";
-    btn.style.color = "var(--depin)";
-    btn.style.borderColor = "var(--depin)";
+    btn.innerHTML = "🚀 IGNITE QUANTUM MINER";
+    btn.style.background = "linear-gradient(135deg, rgba(6,182,212,0.8), rgba(124,58,237,0.8))";
+    btn.style.color = "white";
+    btn.style.boxShadow = "0 0 20px rgba(6,182,212,0.4)";
     dashboard.style.display = "none";
+    
+    clearInterval(uptimeInterval);
     
     if (minerWorker) {
       minerWorker.postMessage({ command: 'STOP' });
       clearInterval(hashrateInterval);
+      logToMinerTerminal("[SYSTEM] Miner shutdown safely. Resources released.");
     }
   }
 }
