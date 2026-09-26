@@ -2,47 +2,71 @@
 // LGAI OMNIVERSE — MAIN JAVASCRIPT
 // ══════════════════════════════════════════════════
 
-// ── STARFIELD CANVAS ──
+// ── QUANTUM MATRIX RAIN CANVAS ──
 const canvas = document.getElementById('starfield');
 const ctx = canvas.getContext('2d');
-let stars = [];
+
+let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?LGAI';
+characters = characters.split('');
+
+let fontSize = 14;
+let columns = 0;
+let drops = [];
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-}
-
-function initStars() {
-  stars = [];
-  for (let i = 0; i < 200; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.5,
-      speed: Math.random() * 0.3 + 0.05,
-      opacity: Math.random()
-    });
+  columns = canvas.width / fontSize;
+  drops = [];
+  for(let x = 0; x < columns; x++) {
+    drops[x] = Math.random() * canvas.height / fontSize;
   }
 }
 
-function animateStars() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  stars.forEach(s => {
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(148,163,184,${s.opacity})`;
-    ctx.fill();
-    s.y += s.speed;
-    s.opacity = 0.3 + Math.sin(Date.now() / 2000 + s.x) * 0.3;
-    if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
-  });
-  requestAnimationFrame(animateStars);
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(10, 13, 26, 0.08)'; // Dark background with slight transparency for trail
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#10b981'; // Matrix Green
+  ctx.font = fontSize + 'px monospace';
+
+  for(let i = 0; i < drops.length; i++) {
+    const text = characters[Math.floor(Math.random() * characters.length)];
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+  requestAnimationFrame(drawMatrix);
 }
 
 resizeCanvas();
-initStars();
-animateStars();
-window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+drawMatrix();
+window.addEventListener('resize', resizeCanvas);
+
+// ── TYPEWRITER EFFECT FOR HERO ──
+document.addEventListener("DOMContentLoaded", () => {
+  const heroSub = document.querySelector('.hero-sub');
+  if(heroSub) {
+    const text = heroSub.innerHTML;
+    heroSub.innerHTML = '';
+    let i = 0;
+    heroSub.style.fontFamily = 'monospace';
+    heroSub.style.color = '#10b981';
+    function typeWriter() {
+      if (i < text.length) {
+        heroSub.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 15);
+      } else {
+        heroSub.style.borderRight = "none";
+      }
+    }
+    setTimeout(typeWriter, 500);
+  }
+});
 
 // ── NAVBAR SCROLL ──
 const nav = document.getElementById('nav');
