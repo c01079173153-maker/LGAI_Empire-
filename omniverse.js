@@ -216,7 +216,7 @@ document.querySelectorAll('.pillar-card, .market-card, .rm-item, .stat-card').fo
   observer.observe(el);
 });
 
-// ── OMNI-CHAIN AI LIVE PROFIT TICKER ──
+// ── OMNI-CHAIN AI LIVE PROFIT TICKER & TERMINAL ──
 const chains = ['Ethereum', 'Solana', 'Avalanche', 'Base'];
 function tickProfit() {
   document.querySelectorAll('.chain-profit').forEach((el, i) => {
@@ -227,6 +227,31 @@ function tickProfit() {
 }
 setInterval(tickProfit, 3000);
 tickProfit();
+
+const TERMINAL_LOGS = [
+  "[ETH] Flashloan executed. Profit: +12.4 LGAI",
+  "[SOL] Arbitrage opportunity found. Routing via Jupiter...",
+  "[AVAX] Sniping new LP token... Success.",
+  "[BASE] Cross-chain bridge fee minimized. Rebalancing...",
+  "[ETH] MEV attack blocked. Extracting value...",
+  "[SOL] Raydium pool anomaly detected. Executing trade.",
+  "[SYSTEM] Swarm matrix synchronized.",
+  "[BASE] Aerodrome liquidity injected."
+];
+
+function updateTerminal() {
+  const terminal = document.getElementById('terminalLogs');
+  if (!terminal) return;
+  const newLog = document.createElement('div');
+  const now = new Date();
+  const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+  newLog.textContent = `[${time}] ${TERMINAL_LOGS[Math.floor(Math.random() * TERMINAL_LOGS.length)]}`;
+  terminal.appendChild(newLog);
+  if (terminal.children.length > 5) {
+    terminal.removeChild(terminal.firstChild);
+  }
+}
+setInterval(updateTerminal, 2000);
 
 console.log('%c🌌 LGAI OMNIVERSE ACTIVATED', 'font-family: monospace; font-size: 18px; color: #7c3aed; font-weight: bold;');
 console.log('%cAll 4 autonomous pillars online. The empire is self-sustaining.', 'color: #06b6d4; font-size: 12px;');

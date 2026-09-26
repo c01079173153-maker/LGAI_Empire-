@@ -478,3 +478,47 @@ section { position: relative; z-index: 1; padding: 6rem 2rem; max-width: 1280px;
   .lang-btn span:last-child { display: none; }
   .lang-dropdown { right: auto; left: 0; }
 }
+
+/* ── NEW: OMNI TERMINAL ── */
+.omni-terminal {
+  background: rgba(5, 5, 10, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+}
+.terminal-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--omni);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--omni);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+.terminal-body {
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #10b981;
+  height: 120px;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  text-shadow: 0 0 5px rgba(16, 185, 129, 0.4);
+}
+.terminal-body div {
+  animation: fade-up 0.3s ease;
+}
