@@ -43,8 +43,7 @@ async function postMarketingContent(db) {
     // 텔레그램 브로드캐스팅 (MarkdownV2 특수문자 방어 로직은 broadcaster 내부에 구현)
     await broadcaster.broadcast(title, content);
     
-    // TODO: Phase 12 - Twitter (X) API 연동 시 주석 해제
-    // await aiEngine.postToTwitter(title, twitterContent);
+    // 텔레그램과 트위터 브로드캐스팅은 broadcaster.js에서 동시 처리됩니다.
 
   } catch (error) {
     console.error("  ❌ [AI-SCHEDULER] Error during marketing post generation:", error.message);

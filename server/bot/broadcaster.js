@@ -79,7 +79,7 @@ async function postToTwitter(message) {
 // ============================================
 async function broadcast(title, content) {
   const fullMessage = `<b>${title}</b>\n\n${content}\n\n🌐 https://legionai-hub.vercel.app/`;
-  const tweetMessage = `${title}\n\n${content}\n\n$LGAI`;
+  const tweetMessage = `${title}\n\n${content}\n\n🔗 Buy here: https://legionai-hub.vercel.app/\n#LGAI`;
   
   // 텔레그램과 트위터 동시 발사
   await Promise.all([
