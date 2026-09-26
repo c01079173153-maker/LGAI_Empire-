@@ -7,43 +7,65 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract LGAIPresale is Ownable, ReentrancyGuard {
     IERC20 public lgaiToken;
-    uint256 public rate = 10000; // 1 ETH = 10,000 LGAI
-    uint256 public referralBonusPercent = 5; // 5% bonus for referrer
+    uint256 public rate = 10000; // 1 ETH = 10,000 LGAI allocation
+    bool public claimEnabled = false;
 
-    // Events
-    event TokensPurchased(address indexed buyer, uint256 ethSpent, uint256 tokensBought);
-    event ReferralPaid(address indexed referrer, address indexed buyer, uint256 bonusAmount);
+    // Database of allocations (who bought how much)
+    mapping(address => uint256) public allocations;
+    mapping(address => bool) public hasClaimed;
 
-    constructor(address _tokenAddress) Ownable(msg.sender) {
-        lgaiToken = IERC20(_tokenAddress);
+    uint256 public totalEthRaised;
+    uint256 public totalTokensAllocated;
+
+    event AllocationPurchased(address indexed buyer, uint256 ethSpent, uint256 allocatedTokens);
+    event TokensClaimed(address indexed claimer, uint256 amount);
+    event ClaimStatusUpdated(bool status);
+
+    constructor() Ownable(msg.sender) {
+        // Token address can be set later at TGE
     }
 
-    // Function to buy tokens
-    function buyTokens(address referrer) public payable nonReentrant {
-        require(msg.value > 0, "Must send ETH to buy tokens");
+    // Phase 1: Buy Allocations
+    function buyAllocation() public payable nonReentrant {
+        require(msg.value > 0, "Must send ETH");
+        require(!claimEnabled, "Presale has ended, claiming is active");
         
-        uint256 ethAmount = msg.value;
-        uint256 tokensToBuy = ethAmount * rate;
+        uint256 allocatedTokens = msg.value * rate;
+        
+        allocations[msg.sender] += allocatedTokens;
+        totalEthRaised += msg.value;
+        totalTokensAllocated += allocatedTokens;
 
-        // Check if contract has enough tokens
-        require(lgaiToken.balanceOf(address(this)) >= tokensToBuy, "Not enough tokens in presale contract");
-
-        // Send tokens to buyer
-        require(lgaiToken.transfer(msg.sender, tokensToBuy), "Token transfer failed");
-        emit TokensPurchased(msg.sender, ethAmount, tokensToBuy);
-
-        // Handle referral
-        if (referrer != address(0) && referrer != msg.sender) {
-            uint256 bonusTokens = (tokensToBuy * referralBonusPercent) / 100;
-            // Check if contract has enough tokens for bonus
-            if (lgaiToken.balanceOf(address(this)) >= bonusTokens) {
-                require(lgaiToken.transfer(referrer, bonusTokens), "Referral token transfer failed");
-                emit ReferralPaid(referrer, msg.sender, bonusTokens);
-            }
-        }
+        emit AllocationPurchased(msg.sender, msg.value, allocatedTokens);
     }
 
-    // Function to withdraw collected ETH to owner
+    // Phase 2: Claim Tokens at TGE
+    function claimTokens() public nonReentrant {
+        require(claimEnabled, "Claiming is not active yet");
+        require(!hasClaimed[msg.sender], "Already claimed");
+        
+        uint256 amount = allocations[msg.sender];
+        require(amount > 0, "No allocation to claim");
+        require(address(lgaiToken) != address(0), "Token not set");
+        require(lgaiToken.balanceOf(address(this)) >= amount, "Not enough tokens in contract");
+
+        hasClaimed[msg.sender] = true;
+        require(lgaiToken.transfer(msg.sender, amount), "Transfer failed");
+
+        emit TokensClaimed(msg.sender, amount);
+    }
+
+    // Admin Functions
+    function setTokenAddress(address _token) public onlyOwner {
+        lgaiToken = IERC20(_token);
+    }
+
+    function setClaimEnabled(bool _status) public onlyOwner {
+        require(address(lgaiToken) != address(0), "Set token address first");
+        claimEnabled = _status;
+        emit ClaimStatusUpdated(_status);
+    }
+
     function withdrawETH() public onlyOwner {
         uint256 balance = address(this).balance;
         require(balance > 0, "No ETH to withdraw");
@@ -51,12 +73,10 @@ contract LGAIPresale is Ownable, ReentrancyGuard {
         require(success, "ETH withdrawal failed");
     }
 
-    // Function to withdraw remaining tokens (e.g. when presale ends)
-    function withdrawTokens(uint256 amount) public onlyOwner {
+    function withdrawUnsoldTokens(uint256 amount) public onlyOwner {
         require(lgaiToken.transfer(owner(), amount), "Token withdrawal failed");
     }
 
-    // Update rate
     function setRate(uint256 newRate) public onlyOwner {
         rate = newRate;
     }

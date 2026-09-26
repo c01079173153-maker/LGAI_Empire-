@@ -253,5 +253,104 @@ function updateTerminal() {
 }
 setInterval(updateTerminal, 2000);
 
+// ── PRESALE / TGE SMART CONTRACT INTEGRATION ──
+// Replace with the deployed LGAIPresale contract address on Sepolia/Mainnet
+const PRESALE_CONTRACT_ADDRESS = "0xYourDeployedPresaleContractAddress";
+
+const PRESALE_ABI = [
+  "function allocations(address) view returns (uint256)",
+  "function buyAllocation() payable",
+  "function claimTokens()",
+  "function claimEnabled() view returns (bool)"
+];
+
+let presaleProvider;
+let presaleSigner;
+let presaleContract;
+let userAddress;
+
+async function connectPresaleWallet() {
+  if (!window.ethereum) {
+    alert("MetaMask is not installed!");
+    return;
+  }
+  try {
+    presaleProvider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await presaleProvider.send("eth_requestAccounts", []);
+    userAddress = accounts[0];
+    presaleSigner = await presaleProvider.getSigner();
+    
+    // Create a mock contract instance for UI demonstration if no real address is provided yet
+    // presaleContract = new ethers.Contract(PRESALE_CONTRACT_ADDRESS, PRESALE_ABI, presaleSigner);
+
+    // Update UI
+    document.getElementById("presale-status-logged-out").style.display = "none";
+    document.getElementById("presale-dashboard").style.display = "block";
+    document.getElementById("wallet-address").textContent = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+    
+    // In a real app, you would fetch the allocation from the contract:
+    // const allocation = await presaleContract.allocations(userAddress);
+    // document.getElementById("user-allocation").textContent = ethers.formatEther(allocation);
+    
+    // Mock allocation for demonstration
+    document.getElementById("user-allocation").textContent = "0.0";
+    
+  } catch (err) {
+    console.error(err);
+    alert("Wallet connection failed or rejected.");
+  }
+}
+
+async function buyAllocation() {
+  const amount = document.getElementById("eth-amount").value;
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid ETH amount.");
+    return;
+  }
+  
+  if (!presaleSigner) {
+    alert("Please connect your wallet first.");
+    return;
+  }
+
+  try {
+    // Real implementation:
+    // const tx = await presaleContract.buyAllocation({ value: ethers.parseEther(amount) });
+    // await tx.wait();
+    
+    alert(`[MOCK TX] ⚡ Sending ${amount} ETH to Presale Vault...\n\nTransaction Confirmed! Your allocation has been secured in the blockchain mapping.`);
+    
+    // Update mock allocation (assuming 1 ETH = 10,000 LGAI)
+    const currentAlloc = parseFloat(document.getElementById("user-allocation").textContent);
+    const newAlloc = currentAlloc + (parseFloat(amount) * 10000);
+    document.getElementById("user-allocation").textContent = newAlloc.toLocaleString();
+    
+  } catch (err) {
+    console.error(err);
+    alert("Transaction failed: " + err.message);
+  }
+}
+
+async function claimTokens() {
+  if (!presaleSigner) {
+    alert("Please connect your wallet first.");
+    return;
+  }
+
+  try {
+    // Real implementation:
+    // const isClaimEnabled = await presaleContract.claimEnabled();
+    // if (!isClaimEnabled) throw new Error("Claiming is not active yet (TGE hasn't started).");
+    // const tx = await presaleContract.claimTokens();
+    // await tx.wait();
+    
+    alert(`[MOCK TX] 🔒 Access Denied.\n\nClaiming is currently DISABLED.\nTokens can only be claimed after the Token Generation Event (TGE) begins.`);
+    
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+
 console.log('%c🌌 LGAI OMNIVERSE ACTIVATED', 'font-family: monospace; font-size: 18px; color: #7c3aed; font-weight: bold;');
 console.log('%cAll 4 autonomous pillars online. The empire is self-sustaining.', 'color: #06b6d4; font-size: 12px;');
