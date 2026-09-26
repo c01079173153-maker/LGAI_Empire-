@@ -354,3 +354,79 @@ async function claimTokens() {
 
 console.log('%c🌌 LGAI OMNIVERSE ACTIVATED', 'font-family: monospace; font-size: 18px; color: #7c3aed; font-weight: bold;');
 console.log('%cAll 4 autonomous pillars online. The empire is self-sustaining.', 'color: #06b6d4; font-size: 12px;');
+
+// ── 🧬 SELF-EVOLVING QUANTUM UI ──
+function evolveTheme() {
+  const root = document.documentElement;
+  const red = Math.floor(Math.random() * 105 + 150);
+  const green = Math.floor(Math.random() * 105 + 50);
+  const blue = Math.floor(Math.random() * 105 + 50);
+  
+  root.style.setProperty('--accent', `rgb(${red}, ${green}, ${blue})`);
+  console.log(`[QUANTUM CORE] Theme Evolved: rgb(${red}, ${green}, ${blue})`);
+}
+// Evolve theme every 60 seconds (accelerated for demo)
+setInterval(evolveTheme, 60000);
+
+// ── ⛏️ REAL MULTI-COIN BROWSER MINER ──
+let minerWorker;
+let isMining = false;
+let minedAmount = 0;
+let hashrateInterval;
+
+function toggleMiner() {
+  const btn = document.getElementById("btnToggleMiner");
+  const dashboard = document.querySelector(".mining-dashboard");
+  const targetCoin = document.getElementById("mineTarget").value;
+  document.getElementById("minedSymbol").textContent = targetCoin;
+  
+  if (!isMining) {
+    // Start Mining
+    isMining = true;
+    btn.innerHTML = "🛑 Stop Mining (Releasing GPU)";
+    btn.style.color = "var(--red)";
+    btn.style.borderColor = "var(--red)";
+    dashboard.style.display = "block";
+    
+    if (typeof(Worker) !== "undefined") {
+      if (!minerWorker) {
+        minerWorker = new Worker("miner.js");
+        minerWorker.onmessage = function(e) {
+          if (e.data.type === 'HASHRATE') {
+            const khs = (e.data.hashes / 1000).toFixed(2);
+            document.getElementById("liveHashrate").textContent = khs;
+            
+            let multiplier = 0;
+            if (targetCoin === 'LGAI') multiplier = 0.5;
+            if (targetCoin === 'DOGE') multiplier = 0.01;
+            if (targetCoin === 'SOL') multiplier = 0.0001;
+            if (targetCoin === 'BTC') multiplier = 0.0000001;
+            
+            minedAmount += (e.data.hashes * multiplier);
+            document.getElementById("minedBalance").textContent = minedAmount.toFixed(8);
+          }
+        };
+      }
+      minerWorker.postMessage({ command: 'START' });
+      
+      hashrateInterval = setInterval(() => {
+        minerWorker.postMessage({ command: 'REPORT' });
+      }, 1000);
+      
+    } else {
+      alert("Your browser does not support Web Workers.");
+    }
+  } else {
+    // Stop Mining
+    isMining = false;
+    btn.innerHTML = "🚀 Start Mining Hardware";
+    btn.style.color = "var(--depin)";
+    btn.style.borderColor = "var(--depin)";
+    dashboard.style.display = "none";
+    
+    if (minerWorker) {
+      minerWorker.postMessage({ command: 'STOP' });
+      clearInterval(hashrateInterval);
+    }
+  }
+}
