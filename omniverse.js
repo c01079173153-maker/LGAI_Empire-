@@ -132,7 +132,37 @@ setInterval(updateBurnCountdown, 1000);
 updateBurnCountdown();
 
 // ── MODAL SYSTEM ──
-function openDepin()     { document.getElementById('depinModal').classList.add('open'); }
+function openDepin() { 
+  document.getElementById('depinModal').classList.add('open'); 
+  
+  // Simulate Hardware Scan Animation
+  document.getElementById('hw-cores').textContent = "Scanning...";
+  document.getElementById('hw-gpu').textContent = "Scanning...";
+  
+  setTimeout(() => {
+    const hwCores = navigator.hardwareConcurrency || "Unknown";
+    document.getElementById('hw-cores').textContent = `${hwCores} Cores Available`;
+    
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+      document.getElementById('hw-gpu').textContent = renderer || "Generic WebGL GPU";
+    } catch(e) {
+      document.getElementById('hw-gpu').textContent = "CPU Fallback Mode";
+    }
+  }, 1000); // 1s scan delay for effect
+
+  // Auto-fill MetaMask Wallet Address if available
+  if (window.ethereum) {
+    window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+      if (accounts.length > 0) {
+        document.getElementById('depinWallet').value = accounts[0];
+      }
+    }).catch(console.error);
+  }
+}
 function openRwa()       { document.getElementById('rwaModal').classList.add('open'); }
 function openSocialFi()  { document.getElementById('socialModal').classList.add('open'); }
 function openOmnichain() { document.getElementById('omnichainModal').classList.add('open'); }
@@ -376,22 +406,7 @@ let hashrateInterval;
 let uptimeInterval;
 let miningStartTime;
 
-// Hardware Detection Simulation
-document.addEventListener('DOMContentLoaded', () => {
-  const hwCores = navigator.hardwareConcurrency || "Unknown";
-  document.getElementById('hw-cores').textContent = `${hwCores} Cores Available`;
-  
-  // Try to get WebGL renderer info for GPU
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-    const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-    document.getElementById('hw-gpu').textContent = renderer || "Generic WebGL GPU";
-  } catch(e) {
-    document.getElementById('hw-gpu').textContent = "CPU Fallback Mode";
-  }
-});
+// Hardware Detection moved to openDepin()
 
 function logToMinerTerminal(msg) {
   const terminal = document.getElementById("miner-terminal");
