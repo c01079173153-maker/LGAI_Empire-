@@ -528,7 +528,8 @@ function toggleMiner() {
             const khs = (e.data.hashes / 1000).toFixed(2);
             document.getElementById("liveHashrate").textContent = khs;
             
-            let baseMultiplier = 0.5;
+            // Drastically lower the multiplier to make it look real and difficult to mine
+            let baseMultiplier = 0.0001;
             // Get Swarm Multiplier from UI
             let swarmMult = parseFloat(document.getElementById("swarm-multiplier").textContent) || 1.0;
             
