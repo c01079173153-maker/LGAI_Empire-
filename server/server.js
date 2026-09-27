@@ -133,6 +133,27 @@ app.get('/api/hash/stats', (req, res) => {
 });
 
 // ════════════════════════════════════
+// API: REAL BOT LOGS (For Hub Dashboard)
+// ════════════════════════════════════
+let globalBotLogs = [
+  "[SYSTEM] Bot swarm activated. Awaiting targets.",
+  "[SYSTEM] Community defense module online."
+];
+
+app.post('/api/bot/logs', (req, res) => {
+  const { log } = req.body;
+  if (log) {
+    globalBotLogs.unshift(log);
+    if (globalBotLogs.length > 50) globalBotLogs.pop();
+  }
+  res.json({ success: true });
+});
+
+app.get('/api/bot/logs', (req, res) => {
+  res.json(globalBotLogs);
+});
+
+// ════════════════════════════════════
 // PAGES & REDIRECTS
 // ════════════════════════════════════
 app.get('/',          (req, res) => res.sendFile(path.join(__dirname, '..', 'omniverse.html')));

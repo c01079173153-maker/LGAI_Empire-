@@ -29,6 +29,13 @@ async function respondToUnanswered(db) {
     
     db.insertComment({ id: uuidv4(), post_id: post.id, author: persona.name, avatar: persona.avatar, content: aiText, is_bot: 1, is_answered: 0 });
     console.log(`  🤖 [AI-AUTO-REPLY] @${persona.name} → "${post.title.slice(0,30)}..."`);
+    try {
+      fetch(`http://localhost:${process.env.PORT || 3000}/api/bot/logs`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ log: `[DEFENSE] AI @${persona.name} defended FUD post: "${post.title.substring(0,20)}..."` })
+      }).catch(()=>{});
+    } catch(e) {}
   }
 
   // 미답변 댓글
@@ -42,6 +49,13 @@ async function respondToUnanswered(db) {
     db.insertComment({ id: uuidv4(), post_id: c.post_id, author: persona.name, avatar: persona.avatar, content: aiText, is_bot: 1, is_answered: 0 });
     db.markCommentAnswered(c.id);
     console.log(`  💬 [AI-REPLY-COMMENT] @${persona.name}`);
+    try {
+      fetch(`http://localhost:${process.env.PORT || 3000}/api/bot/logs`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ log: `[SHILLING] AI @${persona.name} replied to comment.` })
+      }).catch(()=>{});
+    } catch(e) {}
   }
 }
 

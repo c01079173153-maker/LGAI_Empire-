@@ -166,9 +166,65 @@ function openDepin() {
 function openRwa()       { document.getElementById('rwaModal').classList.add('open'); }
 function openSocialFi()  { document.getElementById('socialModal').classList.add('open'); }
 function openOmnichain() { document.getElementById('omnichainModal').classList.add('open'); }
+function openDex()       { document.getElementById('dexModal').classList.add('open'); }
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
+}
+
+// ── QUANTUM DEX LOGIC ──
+function calcDexSwap() {
+  const pay = parseFloat(document.getElementById('dexPay').value) || 0;
+  // 1 ETH = 45,000 LGAI (mock price)
+  const received = pay * 45000 * 0.995; // 0.5% slippage/fee impact
+  document.getElementById('dexReceive').value = received.toFixed(2);
+}
+
+function executeDexSwap() {
+  const btn = document.querySelector('#dexModal .btn-primary');
+  const amount = document.getElementById('dexPay').value;
+  if(!amount || amount <= 0) {
+    alert("Please enter a valid ETH amount to swap.");
+    return;
+  }
+  btn.innerHTML = "Swapping... <span class='pulse-dot' style='display:inline-block'></span>";
+  btn.style.opacity = '0.7';
+  
+  setTimeout(() => {
+    btn.innerHTML = "✅ Swap Successful!";
+    btn.style.background = "#10b981";
+    setTimeout(() => {
+      alert("Swap execution complete! LGAI transferred to your wallet.");
+      closeModal('dexModal');
+      btn.innerHTML = "Swap Now";
+      btn.style.background = "";
+      btn.style.opacity = '1';
+    }, 1500);
+  }, 2000);
+}
+
+// ── QUANTUM VAULT (STAKING) LOGIC ──
+function executeStake() {
+  const amount = document.getElementById('stakeAmount').value;
+  if(!amount || amount <= 0) {
+    alert("Please enter an amount to stake.");
+    return;
+  }
+  const btn = document.querySelector('.vault-dashboard .btn-primary');
+  btn.innerHTML = "Locking Funds... <span class='pulse-dot' style='display:inline-block'></span>";
+  btn.style.opacity = '0.7';
+  
+  setTimeout(() => {
+    btn.innerHTML = "🔒 Staked & Locked!";
+    btn.style.background = "#10b981";
+    setTimeout(() => {
+      alert("Successfully locked " + amount + " LGAI for 30 days. You are now earning 142.8% APY.");
+      closeModal('omnichainModal');
+      btn.innerHTML = "🔒 STAKE & LOCK";
+      btn.style.background = "linear-gradient(135deg, rgba(251,191,36,0.8), rgba(217,119,6,0.8))";
+      btn.style.opacity = '1';
+    }, 1500);
+  }, 2000);
 }
 
 // Close on backdrop click

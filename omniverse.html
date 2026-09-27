@@ -29,7 +29,8 @@
         <li><a href="#socialfi">SocialFi</a></li>
         <li><a href="#omnichain">Omni-AI</a></li>
         <li><a href="https://lgai-empire.onrender.com/community" target="_blank">Community</a></li>
-        <li><a href="https://legionai-hub.vercel.app/" target="_blank" class="nav-cta" data-i18n="nav_buy">Buy LGAI</a></li>
+        <li><a href="javascript:void(0)" onclick="openDex()" style="color: var(--primary); font-weight: bold;">🔄 Quantum DEX</a></li>
+        <li><a href="#swap" class="nav-cta" data-i18n="nav_buy">Buy Presale</a></li>
       </ul>
       <!-- 언어 선택기는 i18n.js가 동적으로 삽입 -->
     </div>
@@ -450,24 +451,83 @@
           <div>[SYSTEM] Scanning mempools across 4 networks...</div>
         </div>
       </div>
-      <div class="form-group" style="margin-top:1.5rem">
-        <label data-i18n="omni_stake_label">Stake Amount (LGAI)</label>
-        <input type="number" placeholder="Enter LGAI to stake" id="stakeAmount" />
+      <!-- ABSOLUTE LOCK-UP VAULT (STAKING) -->
+      <div class="vault-dashboard" style="margin-top: 1.5rem; background: rgba(0,0,0,0.7); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 1.5rem; position: relative;">
+        <div style="position: absolute; top: 0; right: 0; background: rgba(251,191,36,0.2); padding: 0.3rem 0.6rem; font-size: 0.7rem; color: var(--gold); border-bottom-left-radius: 8px;">ABSOLUTE LOCK-UP</div>
+        
+        <h4 style="color: white; margin-bottom: 1rem; font-family: 'Orbitron'; font-size: 1.1rem;"><span style="color:var(--gold);">👑</span> QUANTUM VAULT</h4>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div style="background: rgba(255,255,255,0.05); padding: 0.8rem; border-radius: 6px;">
+            <div style="font-size: 0.7rem; color: var(--text-muted);">CURRENT APY</div>
+            <div style="font-size: 1.5rem; color: #10b981; font-family: 'Orbitron';">142.8%</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); padding: 0.8rem; border-radius: 6px;">
+            <div style="font-size: 0.7rem; color: var(--text-muted);">TOTAL VALUE LOCKED</div>
+            <div style="font-size: 1.5rem; color: white; font-family: 'Orbitron';">$42.8M</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label style="color: var(--gold); font-size: 0.75rem;">STAKE AMOUNT (LGAI)</label>
+          <div style="display: flex; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid rgba(251,191,36,0.5); border-radius: 8px; overflow: hidden;">
+            <input type="number" placeholder="Enter amount..." id="stakeAmount" style="flex: 1; background: transparent; border: none; color: white; padding: 0.8rem 1rem; outline: none;" />
+            <button onclick="document.getElementById('stakeAmount').value='10000'" style="background: rgba(251,191,36,0.2); border: none; color: var(--gold); padding: 0.8rem 1rem; cursor: pointer; font-weight: bold;">MAX</button>
+          </div>
+        </div>
+        
+        <div style="font-size: 0.7rem; color: #ef4444; margin-bottom: 1rem; text-align: center;">⚠️ WARNING: Staked LGAI cannot be withdrawn for 30 days.</div>
+        
+        <button class="btn-primary full-width" onclick="executeStake()" style="background: linear-gradient(135deg, rgba(251,191,36,0.8), rgba(217,119,6,0.8)); border: none; font-size: 1.1rem; letter-spacing: 1px; box-shadow: 0 0 20px rgba(251,191,36,0.4);">🔒 STAKE & LOCK</button>
       </div>
-      <div class="stake-info">
-        <div class="si-row">
-          <span data-i18n="omni_yield_label">Estimated Daily Yield</span>
-          <span class="si-val" id="stakeYield">— LGAI</span>
+    </div>
+  </div>
+
+  <!-- MODAL: DEX (Quantum Swap) -->
+  <div class="modal" id="dexModal">
+    <div class="modal-box" style="max-width: 450px; border: 1px solid var(--primary); box-shadow: 0 0 40px rgba(139, 92, 246, 0.3); background: rgba(10, 13, 26, 0.95);">
+      <button class="modal-close" onclick="closeModal('dexModal')">✕</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+        <h3 style="margin: 0; font-family: 'Orbitron'; font-size: 1.2rem; color: white;">QUANTUM <span style="color: var(--primary);">SWAP</span></h3>
+        <div style="font-size: 1.2rem;">⚙️</div>
+      </div>
+      
+      <div style="background: rgba(0,0,0,0.6); border-radius: 12px; padding: 1rem; margin-bottom: 0.5rem; border: 1px solid rgba(255,255,255,0.05);">
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+          <span>You pay</span>
+          <span>Balance: 1.45 ETH</span>
         </div>
-        <div class="si-row">
-          <span data-i18n="omni_lock_label">Lock Period</span>
-          <span class="si-val" data-i18n="omni_lock_val">30 Days</span>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <input type="number" id="dexPay" placeholder="0.0" oninput="calcDexSwap()" style="background:transparent; border:none; color:white; font-size: 2rem; width: 60%; outline: none; font-family: 'Orbitron';" />
+          <div style="background: rgba(255,255,255,0.1); padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem;">
+            <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20" /> ETH
+          </div>
         </div>
-        <div class="si-row">
-          <span data-i18n="omni_apr_label">Current APR</span>
-          <span class="si-val">~38%</span>
+      </div>
+
+      <div style="text-align: center; margin: -12px 0; position: relative; z-index: 2;">
+        <button style="background: var(--bg); border: 2px solid rgba(255,255,255,0.1); color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;">↓</button>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.6); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.05);">
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+          <span>You receive</span>
+          <span>Balance: 0.0 LGAI</span>
         </div>
-      <button class="btn-primary full-width" onclick="calcStake()" data-i18n="omni_btn">Connect Wallet &amp; Stake</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <input type="number" id="dexReceive" placeholder="0.0" disabled style="background:transparent; border:none; color:white; font-size: 2rem; width: 60%; outline: none; font-family: 'Orbitron';" />
+          <div style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem;">
+            LGAI
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        <span>Slippage Tolerance</span>
+        <span style="color: #10b981;">0.5% (Auto)</span>
+      </div>
+
+      <button class="btn-primary full-width" onclick="executeDexSwap()" style="padding: 1rem; border-radius: 12px; font-size: 1.2rem; font-weight: bold; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);">Swap Now</button>
     </div>
   </div>
 
