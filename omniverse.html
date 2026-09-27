@@ -385,18 +385,28 @@
       <button class="modal-close" onclick="closeModal('rwaModal')">✕</button>
       <div class="modal-icon">🏛️</div>
       <h3 data-i18n="rwa_modal_title">RWA Burn Engine Dashboard</h3>
-      <p data-i18n="rwa_modal_desc">Real-world asset yield fuels daily LGAI buyback &amp; burn — creating a permanent price floor.</p>
-      <div class="rwa-stats-grid">
-        <div class="rwa-stat"><div class="rs-val">$0</div><div class="rs-label">ETH in Treasury</div></div>
-        <div class="rwa-stat"><div class="rs-val">0%</div><div class="rs-label">Current APY</div></div>
-        <div class="rwa-stat"><div class="rs-val">0</div><div class="rs-label">LGAI Burned (Total)</div></div>
-        <div class="rwa-stat"><div class="rs-val">$0</div><div class="rs-label">Next Burn Value</div></div>
+      <p data-i18n="rwa_modal_desc">Yield from Real-World Assets is accumulating. Burning requires explicit Commander authorization.</p>
+      
+      <!-- THE SPECTACLE VAULT -->
+      <div id="rwa-vault-container" style="background: rgba(0,0,0,0.8); border: 2px solid var(--gold); border-radius: 12px; padding: 2rem 1rem; text-align: center; position: relative; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 0 30px rgba(251,191,36,0.2);">
+        <div class="scanline" style="background: rgba(251,191,36,0.3);"></div>
+        <div style="font-size: 0.8rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 0.5rem;">TOTAL YIELD IN TREASURY</div>
+        <div id="rwa-vault-balance" style="font-size: 3.5rem; font-family: 'Orbitron'; color: white; text-shadow: 0 0 20px rgba(251,191,36,0.8); line-height: 1;">$0.00</div>
+        <div style="font-size: 0.9rem; color: #10b981; margin-top: 0.5rem;">+ Accumulating (14.2% APY)</div>
       </div>
-      <div class="burn-timer">
-        <div class="bt-label" data-i18n="rwa_next_burn">⏱ Next Autonomous Burn In</div>
-        <div class="bt-countdown" id="burnCountdown">23:59:42</div>
+
+      <div class="rwa-stats-grid" style="margin-bottom: 1.5rem;">
+        <div class="rwa-stat"><div class="rs-val" id="rwa-total-burned">4,204,192</div><div class="rs-label">LGAI Burned (Total)</div></div>
+        <div class="rwa-stat"><div class="rs-val">T-Bills</div><div class="rs-label">Underlying Asset</div></div>
       </div>
-      <button class="btn-primary full-width" style="margin-top:1.5rem" data-i18n="rwa_btn">View on Etherscan →</button>
+
+      <div class="burn-status" style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; padding: 1rem; border-radius: 8px; text-align: center;">
+        <div style="color: #ef4444; font-weight: bold; letter-spacing: 1px; font-size: 0.9rem;" id="rwa-status-text">
+          <span class="pulse-dot" style="background: #ef4444;"></span> AWAITING COMMANDER AUTHORIZATION...
+        </div>
+      </div>
+      
+      <button class="btn-primary full-width" style="margin-top:1.5rem; background: var(--bg); border: 1px solid var(--gold); color: var(--gold);" data-i18n="rwa_btn">View Treasury on Etherscan →</button>
     </div>
   </div>
 

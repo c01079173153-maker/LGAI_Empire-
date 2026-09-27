@@ -154,6 +154,32 @@ app.get('/api/bot/logs', (req, res) => {
 });
 
 // ════════════════════════════════════
+// API: RWA BURN ENGINE (Spectacle Trigger)
+// ════════════════════════════════════
+let rwaBurnStatus = 'IDLE';
+
+app.get('/api/rwa/status', (req, res) => {
+  res.json({ status: rwaBurnStatus });
+});
+
+app.post('/api/rwa/burn', (req, res) => {
+  if (rwaBurnStatus === 'BURNING') {
+    return res.json({ success: false, msg: 'Already burning' });
+  }
+  
+  rwaBurnStatus = 'BURNING';
+  console.log('🔥 [COMMANDER] Authorized GLOBAL RWA BURN! Initiating spectacle...');
+  
+  // Reset after 10 seconds so the spectacle ends and vault can refill
+  setTimeout(() => {
+    rwaBurnStatus = 'IDLE';
+    console.log('🔥 [SYSTEM] Burn complete. Returning to IDLE.');
+  }, 10000);
+  
+  res.json({ success: true, msg: 'Burn Triggered' });
+});
+
+// ════════════════════════════════════
 // PAGES & REDIRECTS
 // ════════════════════════════════════
 app.get('/',          (req, res) => res.sendFile(path.join(__dirname, '..', 'omniverse.html')));

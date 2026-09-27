@@ -116,20 +116,82 @@ function updateLiveStats() {
 setTimeout(updateLiveStats, 800);
 setInterval(updateLiveStats, 10000);
 
-// ── BURN COUNTDOWN TIMER ──
-function updateBurnCountdown() {
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24, 0, 0, 0);
-  const diff = midnight - now;
-  const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-  const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-  const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-  const el = document.getElementById('burnCountdown');
-  if (el) el.textContent = `${h}:${m}:${s}`;
+// ── RWA SPECTACLE VAULT ──
+let vaultBalance = 142050.45;
+let isBurning = false;
+
+function initRwaVaultSpectacle() {
+  const balanceEl = document.getElementById('rwa-vault-balance');
+  const statusEl = document.getElementById('rwa-status-text');
+  const totalBurnedEl = document.getElementById('rwa-total-burned');
+  
+  // 1. Accumulate Yield
+  setInterval(() => {
+    if (isBurning || !balanceEl) return;
+    vaultBalance += (Math.random() * 0.5 + 0.1); // Add a few cents every tick
+    balanceEl.textContent = '$' + vaultBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  }, 300);
+
+  // 2. Poll for Commander's Burn Signal
+  setInterval(async () => {
+    if (isBurning) return;
+    try {
+      const res = await fetch('https://lgai-empire.onrender.com/api/rwa/status');
+      const data = await res.json();
+      if (data.status === 'BURNING') {
+        executePublicBurnSpectacle(balanceEl, statusEl, totalBurnedEl);
+      }
+    } catch (e) {}
+  }, 2000);
 }
-setInterval(updateBurnCountdown, 1000);
-updateBurnCountdown();
+
+function executePublicBurnSpectacle(balanceEl, statusEl, totalBurnedEl) {
+  isBurning = true;
+  
+  // Visual Effects
+  document.body.style.animation = "shake 0.5s infinite";
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0'; overlay.style.left = '0'; overlay.style.width = '100vw'; overlay.style.height = '100vh';
+  overlay.style.background = 'rgba(239, 68, 68, 0.3)';
+  overlay.style.zIndex = '9999';
+  overlay.style.pointerEvents = 'none';
+  overlay.style.animation = "pulse-red 1s infinite";
+  document.body.appendChild(overlay);
+  
+  statusEl.innerHTML = "⚠️ COMMANDER AUTHORIZED BURN IN PROGRESS... ⚠️";
+  statusEl.style.color = "white";
+  statusEl.parentElement.style.background = "#ef4444";
+  
+  let currentBurnedStr = totalBurnedEl.textContent.replace(/,/g, '');
+  let currentBurned = parseInt(currentBurnedStr) || 4204192;
+  
+  // Drain the vault
+  let drainInterval = setInterval(() => {
+    vaultBalance -= (vaultBalance * 0.1);
+    if (vaultBalance < 1) {
+      vaultBalance = 0;
+      clearInterval(drainInterval);
+      
+      // Cleanup Effects
+      setTimeout(() => {
+        document.body.style.animation = "";
+        document.body.removeChild(overlay);
+        statusEl.innerHTML = "<span class='pulse-dot' style='background: #ef4444;'></span> AWAITING NEXT COMMANDER SIGNAL...";
+        statusEl.parentElement.style.background = "rgba(239, 68, 68, 0.1)";
+        statusEl.style.color = "#ef4444";
+        isBurning = false;
+      }, 3000);
+    }
+    balanceEl.textContent = '$' + vaultBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+    // Pump the burned amount
+    currentBurned += Math.floor(Math.random() * 50000 + 10000);
+    totalBurnedEl.textContent = currentBurned.toLocaleString();
+  }, 100);
+}
+
+initRwaVaultSpectacle();
 
 // ── MODAL SYSTEM ──
 // Fetch Swarm Stats
