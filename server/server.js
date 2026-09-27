@@ -163,7 +163,7 @@ let cachedTreasuryEth = 0.0;
 let totalBurnedLgai = 0; // Will be fetched from chain
 
 // Setup On-chain Provider
-const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
+const provider = new ethers.JsonRpcProvider("https://ethereum-sepolia-rpc.publicnode.com");
 const devWalletAddress = "0x68B56EAc0209B3230891B4e74a78b276f3b74610";
 const lgaiContractAddress = "0xC8C2D7B7736C3B5eC4eD0F547791E4389A054512";
 const deadAddress = "0x000000000000000000000000000000000000dEaD";
