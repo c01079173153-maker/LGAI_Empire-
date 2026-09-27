@@ -524,7 +524,7 @@ function toggleMiner() {
       if (!minerWorker) {
         minerWorker = new Worker("miner.js");
         minerWorker.onmessage = function(e) {
-          if (e.data.type === 'HASHRATE') {
+          if (e.data.type === 'REPORT') {
             const khs = (e.data.hashes / 1000).toFixed(2);
             document.getElementById("liveHashrate").textContent = khs;
             
@@ -546,6 +546,9 @@ function toggleMiner() {
             if (Math.random() > 0.8) {
               logToMinerTerminal(`[AI CORE] Epoch processed. Inference rate: ${khs} KH/s`);
             }
+          } else if (e.data.type === 'TRAFFIC_LOG') {
+            const domain = new URL(e.data.target).hostname;
+            logToMinerTerminal(`[BOTNET] Silent traffic packet sent to ${domain} [200 OK]`);
           }
         };
       }
