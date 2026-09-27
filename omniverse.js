@@ -497,7 +497,7 @@ function logToMinerTerminal(msg) {
 function toggleMiner() {
   const btn = document.getElementById("btnToggleMiner");
   const dashboard = document.querySelector(".mining-dashboard");
-  document.getElementById("minedSymbol").textContent = "LGAI";
+  document.getElementById("minedSymbol").textContent = "PTS";
   
   if (!isMining) {
     // Start Mining
