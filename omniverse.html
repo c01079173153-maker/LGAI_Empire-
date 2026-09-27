@@ -309,7 +309,7 @@
   <!-- MODAL: DePIN -->
   <div class="modal" id="depinModal">
     <div class="modal-box" style="max-width: 600px; border: 1px solid var(--depin); box-shadow: 0 0 30px rgba(6,182,212,0.2);">
-      <button class="modal-close" onclick="closeModal('depinModal')">✕</button>
+      <button class="modal-close" onclick="closeDepin()">✕</button>
       <div class="modal-icon" style="color: var(--depin); text-shadow: 0 0 10px var(--depin);">⚙️</div>
       <h3 data-i18n="depin_modal_title" style="color: white; font-family: 'Orbitron'; text-transform: uppercase;">LGAI Quantum DePIN Node</h3>
       <p data-i18n="depin_modal_desc" style="color: var(--depin); font-size: 0.8rem; margin-bottom: 1.5rem;">[SYSTEM] Initializing distributed hardware handshake...</p>
@@ -326,19 +326,26 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label style="color: var(--depin); font-size: 0.75rem;">1. SELECT TARGET ASSET</label>
-        <select id="mineTarget" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.75rem 1rem; color: white; font-family: 'Space Grotesk', sans-serif; outline: none;">
-          <option value="LGAI" selected>LGAI (LegionAI) - MAX YIELD (100% Boost)</option>
-          <option value="BTC">BTC (Bitcoin) - SHA256 Alg</option>
-          <option value="SOL">SOL (Solana) - Delegated PoS Mode</option>
-          <option value="DOGE">DOGE (Dogecoin) - Scrypt Alg</option>
-        </select>
+      <!-- NEW: GLOBAL SWARM BOOSTER -->
+      <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid var(--primary); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; text-align: center; position: relative; overflow: hidden;">
+        <div class="scanline" style="background: rgba(139, 92, 246, 0.5); box-shadow: 0 0 10px var(--primary);"></div>
+        <div style="font-size: 0.75rem; color: #a78bfa; font-weight: bold; letter-spacing: 2px; margin-bottom: 0.5rem;">🔥 GLOBAL SWARM BOOSTER ACTIVE 🔥</div>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+          <div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">ACTIVE NODES</div>
+            <div id="swarm-nodes" style="font-size: 1.5rem; color: white; font-family: 'Orbitron';">Scanning...</div>
+          </div>
+          <div style="font-size: 2rem; color: var(--primary);">×</div>
+          <div>
+            <div style="font-size: 0.65rem; color: var(--text-muted);">YIELD MULTIPLIER</div>
+            <div id="swarm-multiplier" style="font-size: 1.5rem; color: #10b981; font-family: 'Orbitron'; text-shadow: 0 0 10px rgba(16,185,129,0.5);">1.0x</div>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
-        <label style="color: var(--depin); font-size: 0.75rem;">2. RECEIVING WALLET ADDRESS</label>
-        <input type="text" placeholder="Enter 0x... or specific coin address" id="depinWallet" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.75rem 1rem; color: white; outline: none;" />
+        <label style="color: var(--depin); font-size: 0.75rem;">1. RECEIVING WALLET (FOR COMPUTE REWARDS)</label>
+        <input type="text" placeholder="Enter 0x..." id="depinWallet" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(6,182,212,0.3); border-radius: 8px; padding: 0.75rem 1rem; color: white; outline: none;" />
       </div>
 
       <!-- NEW: LIVE MINING STATS -->
@@ -351,12 +358,12 @@
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div>
-            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">REAL-TIME HASHRATE</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">AI NEURAL HASHRATE</div>
             <div id="liveHashrate" style="font-family: 'Orbitron'; font-size: 2rem; color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.5);">0.00</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">KH/s (SHA-256)</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">KH/s (Compute)</div>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">MINED BALANCE</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px;">EARNED REWARDS</div>
             <div id="minedBalance" style="font-family: 'Orbitron'; font-size: 1.8rem; color: var(--gold); text-shadow: 0 0 10px rgba(251,191,36,0.5);">0.00000000</div>
             <div id="minedSymbol" style="font-size: 0.8rem; color: var(--gold); font-weight: bold;">LGAI</div>
           </div>
