@@ -160,7 +160,7 @@ app.get('/api/bot/logs', (req, res) => {
 let rwaBurnStatus = 'IDLE';
 let cachedApy = 14.2;
 let cachedTreasuryEth = 0.0;
-let totalBurnedLgai = 4204192; // Will be incremented
+let totalBurnedLgai = 0; // Will be fetched from chain
 
 // Setup On-chain Provider
 const provider = new ethers.JsonRpcProvider("https://rpc.sepolia.org");
@@ -192,15 +192,21 @@ async function updateDefiLlamaAPY() {
 updateDefiLlamaAPY();
 setInterval(updateDefiLlamaAPY, 3600000); // every 1 hour
 
-// Fetch Real Treasury ETH Balance
-async function updateTreasuryBalance() {
+// Fetch Real Treasury ETH Balance and Burned LGAI
+async function updateOnChainBalances() {
   try {
     const balance = await provider.getBalance(devWalletAddress);
     cachedTreasuryEth = parseFloat(ethers.formatEther(balance));
-  } catch (e) {}
+    
+    const contract = new ethers.Contract(lgaiContractAddress, erc20Abi, provider);
+    const burnedRaw = await contract.balanceOf(deadAddress);
+    totalBurnedLgai = parseFloat(ethers.formatUnits(burnedRaw, 18));
+  } catch (e) {
+    console.error("[RWA] Failed to fetch on-chain balances", e.message);
+  }
 }
-updateTreasuryBalance();
-setInterval(updateTreasuryBalance, 10000); // every 10 seconds
+updateOnChainBalances();
+setInterval(updateOnChainBalances, 15000); // every 15 seconds
 
 app.get('/api/rwa/status', (req, res) => {
   res.json({ 
@@ -245,6 +251,9 @@ app.post('/api/rwa/burn', async (req, res) => {
   } catch (e) {
     console.error(`[RWA] Execution Error: ${e.message}`);
   }
+  
+  // Force a balance update after 5 seconds
+  setTimeout(updateOnChainBalances, 5000);
   
   // Reset after 10 seconds so the spectacle ends and vault can refill
   setTimeout(() => {
