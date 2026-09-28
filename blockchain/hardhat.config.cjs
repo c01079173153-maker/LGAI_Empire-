@@ -22,7 +22,7 @@ module.exports = {
     // TODO: Replace with real API keys when deploying to Mainnet
     apiKey: {
       sepolia: "YOUR_ETHERSCAN_API_KEY",
-      bsc: "YOUR_BSCSCAN_API_KEY"
+      bsc: process.env.BSCSCAN_API_KEY
     }
   },
   paths: {

@@ -41,7 +41,7 @@ async function main() {
   console.log("✅ Token Ownership Transferred.");
 
   // 5. Transfer Presale Contract Ownership to Commander Wallet
-  const COMMANDER_WALLET = "0x68B56EAc0209B3230891B4e74a78b276f3b74610";
+  const COMMANDER_WALLET = deployer.address; // 사령관님의 현재 배포 지갑을 소유자로 자동 설정
   console.log(`\nTransferring Presale Ownership to Commander (${COMMANDER_WALLET})...`);
   const tx3 = await presale.transferOwnership(COMMANDER_WALLET);
   await tx3.wait();

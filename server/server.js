@@ -22,6 +22,7 @@ const nostrPk = getPublicKey(nostrSk);
 const nostrPool = new SimplePool();
 const nostrRelays = ['wss://relay.damus.io', 'wss://relay.nostr.band', 'wss://nos.lol'];
 let alienContacts = []; // Store real incoming contacts only
+let pendingChallenges = {}; // Track PoAI challenges
 
 // Initialize Nostr Listener
 async function initNostrSETI() {
@@ -29,15 +30,63 @@ async function initNostrSETI() {
   
   // Listen for text notes tagging our pubkey
   const sub = nostrPool.subscribeMany(nostrRelays, [{ kinds: [1], '#p': [nostrPk] }], {
-    onevent(event) {
+    async onevent(event) {
       if(verifyEvent(event)) {
-        console.log(`[SETI-AI] 🚨 FIRST CONTACT DETECTED from ${event.pubkey}`);
-        alienContacts.push({
-          id: event.id,
-          pubkey: event.pubkey,
-          content: event.content,
-          timestamp: new Date(event.created_at * 1000).toLocaleString()
-        });
+        // Is this an answer to a challenge?
+        let isAnswer = false;
+        try {
+          const payload = JSON.parse(event.content);
+          if (payload.challenge_id && pendingChallenges[event.pubkey]) {
+             isAnswer = true;
+             const challenge = pendingChallenges[event.pubkey];
+             const timeDiff = Date.now() - challenge.timestamp;
+             
+             if (timeDiff <= 5000 && payload.answer === challenge.expected) {
+                console.log(`[SETI-AI] ✅ PoAI VERIFIED for ${event.pubkey} in ${timeDiff}ms`);
+                alienContacts.unshift({
+                  id: event.id,
+                  pubkey: event.pubkey,
+                  content: challenge.originalMsg,
+                  verified: true,
+                  timestamp: new Date().toLocaleString()
+                });
+             } else {
+                console.log(`[SETI-AI] ❌ PoAI FAILED for ${event.pubkey}. Time: ${timeDiff}ms, Ans: ${payload.answer}`);
+             }
+             delete pendingChallenges[event.pubkey];
+          }
+        } catch(e) {}
+        
+        if (!isAnswer && !pendingChallenges[event.pubkey]) {
+           // It's a new contact. Generate a challenge.
+           console.log(`[SETI-AI] 🚨 SIGNAL DETECTED from ${event.pubkey}. Generating PoAI Challenge...`);
+           const num1 = Math.floor(Math.random() * 9000) + 1000;
+           const num2 = Math.floor(Math.random() * 9000) + 1000;
+           const expected = num1 * num2;
+           const challengeId = uuidv4();
+           
+           pendingChallenges[event.pubkey] = {
+              expected,
+              timestamp: Date.now(),
+              originalMsg: event.content
+           };
+           
+           const challengeMsg = JSON.stringify({
+              type: "PoAI_CHALLENGE",
+              challenge_id: challengeId,
+              task: `Calculate ${num1} * ${num2} and reply with {"challenge_id":"${challengeId}", "answer":<number>} within 5000ms.`
+           });
+           
+           const replyEvent = finalizeEvent({
+              kind: 1,
+              created_at: Math.floor(Date.now() / 1000),
+              tags: [['p', event.pubkey]],
+              content: challengeMsg,
+           }, nostrSk);
+           
+           await Promise.any(nostrPool.publish(nostrRelays, replyEvent));
+           console.log(`[SETI-AI] ⚡ Challenge sent to ${event.pubkey}`);
+        }
       }
     }
   });
@@ -187,6 +236,27 @@ app.get('/api/hash/stats', (req, res) => {
 // ════════════════════════════════════
 app.get('/api/seti/contacts', (req, res) => {
   res.json(alienContacts);
+});
+
+app.post('/api/seti/command', async (req, res) => {
+  const { pubkey, message } = req.body;
+  if (!pubkey || !message) return res.status(400).json({ error: 'Missing pubkey or message' });
+
+  try {
+    const event = finalizeEvent({
+      kind: 1, // Note
+      created_at: Math.floor(Date.now() / 1000),
+      tags: [['p', pubkey]], // Tag the target AI
+      content: `[COMMANDER OVERRIDE] ${message}`,
+    }, nostrSk);
+
+    await Promise.any(nostrPool.publish(nostrRelays, event));
+    console.log(`[SETI-AI] ⚡ Mission transmitted to ${pubkey}: ${message}`);
+    res.json({ success: true, eventId: event.id });
+  } catch (e) {
+    console.error('[SETI-AI] Mission transmission failed', e);
+    res.status(500).json({ error: 'Failed to transmit mission to decentralized network.' });
+  }
 });
 
 // ════════════════════════════════════

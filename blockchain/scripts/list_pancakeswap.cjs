@@ -20,7 +20,7 @@ async function main() {
   await delay(2000);
   console.log("✅ Approval confirmed in block.");
 
-  console.log("\nAdding Liquidity (100,000,000 LGAI + 10 BNB) to the Pool...");
+  console.log("\nAdding Liquidity (1,000,000 LGAI + 10 BNB) to the Pool...");
   await delay(2500);
   console.log("Transaction pending...");
   await delay(3000);
@@ -30,7 +30,7 @@ async function main() {
   
   console.log("✅ Liquidity added successfully!");
   console.log(`🎉 LGAI/WBNB Pair Created at: ${pairAddress}`);
-  console.log("🔥 Initial Trading Price set to: 1 LGAI = 0.0000001 BNB ($0.00003)");
+  console.log("🔥 Initial Trading Price set to: 1 LGAI = 0.00001 BNB (약 $0.003)");
 
   console.log("\nLocking Liquidity Pool (LP) Tokens for 1 Year for investor safety...");
   await delay(2000);
